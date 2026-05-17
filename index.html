@@ -366,6 +366,23 @@ body {
   flex-direction: column;
   background: var(--bg-editor);
   transition: background var(--transition);
+  position: relative;
+}
+
+.editor-back-header {
+  display: none;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-toolbar);
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 14px;
+  padding: 4px 8px;
+  cursor: pointer;
 }
 
 .editor-scroll {
@@ -813,6 +830,9 @@ body {
     border-bottom: 1px solid var(--border);
   }
   .notes-list { max-height: 140px; }
+  .btn-back { display: none !important; }
+  .main.note-open .sidebar { display: none; }
+  .main.note-open .editor-wrap { min-height: calc(100vh - 52px); }
 
   .editor-scroll { padding: 16px; }
   .editor-title { font-size: 20px; }
@@ -890,6 +910,9 @@ body {
 
     <!-- 编辑器 -->
     <div class="editor-wrap" id="editorPanel">
+      <div class="editor-back-header">
+        <button class="btn-back" id="backToListBtn">← 笔记列表</button>
+      </div>
       <div class="editor-scroll" id="editorContent">
         <input type="text" class="editor-title" id="noteTitle" placeholder="输入笔记标题...">
         <div class="editor-tags" id="tagsDisplay"></div>
@@ -1050,7 +1073,16 @@ function fmtTime(ts){
 function renderNote(){
   var note=notes.find(function(n){return n.id===currentNoteId});
   var ec=document.getElementById("editorContent"),es=document.getElementById("emptyState");
-  if(!note){ec.style.display="none";es.style.display="flex";return}
+  if(!note){
+    ec.style.display="none";es.style.display="flex";
+    // 手机端：无笔记时返回列表
+    if(window.innerWidth<=640){
+      document.querySelector(".main").classList.remove("note-open");
+      var bh=document.querySelector(".editor-back-header");
+      if(bh)bh.style.display="none";
+    }
+    return
+  }
   ec.style.display="";es.style.display="none";
   document.getElementById("noteTitle").value=note.title||"";
   document.getElementById("richEditor").innerHTML=note.htmlContent||"<p>开始书写...</p>";
@@ -1058,6 +1090,12 @@ function renderNote(){
   wordCount();
   editTime(note);
   bindSubdocEvents();
+  // 手机端全屏编辑
+  if(window.innerWidth<=640&&currentNoteId){
+    document.querySelector(".main").classList.add("note-open");
+    var bh=document.querySelector(".editor-back-header");
+    if(bh)bh.style.display="block";
+  }
 }
 
 function renderTags(note){
@@ -1446,6 +1484,17 @@ function init(){
   document.getElementById("importFile").onchange=function(e){if(e.target.files[0])importNotes(e.target.files[0]);e.target.value=""};
   document.getElementById("themeToggle").onclick=toggleTheme;
   document.getElementById("cloudSyncBtn").onclick=pushToGitHub;
+
+  // 手机端：返回笔记列表
+  var backBtn=document.getElementById("backToListBtn");
+  if(backBtn){
+    backBtn.onclick=function(){
+      saveCurrentNote();
+      document.querySelector(".main").classList.remove("note-open");
+      var bh=document.querySelector(".editor-back-header");
+      if(bh)bh.style.display="none";
+    };
+  }
 
   document.getElementById("searchInput").addEventListener("input",function(e){renderList(e.target.value)});
 
