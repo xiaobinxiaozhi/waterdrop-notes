@@ -988,7 +988,14 @@ function debounceSave(){
     saveCurrentNote();
     if(dot)dot.classList.remove("saving");
     if(s)s.textContent="已保存";
+    debouncePush();
   },300);
+}
+
+var pushTimer=null;
+function debouncePush(){
+  clearTimeout(pushTimer);
+  pushTimer=setTimeout(function(){pushToGitHub().catch(function(){})},2000);
 }
 
 /* ========== 渲染列表 ========== */
@@ -1268,59 +1275,74 @@ function handleKeys(e){
   else if(k==="h"){var b=document.queryCommandValue("formatBlock");execFmt("formatBlock",b==="h2"?"p":"h2")}
 }
 
-/* ========== 云同步（OSS 直写）========== */
-var OSS_CFG=null;
-async function loadOSSConfig(){
-  if(OSS_CFG)return OSS_CFG;
-  try{
-    var r=await fetch("https://waterdrop-notes.oss-cn-hangzhou.aliyuncs.com/config.json",{cache:"no-cache",mode:"cors"});
-    if(!r.ok)throw new Error("HTTP "+r.status);
-    OSS_CFG=await r.json();return OSS_CFG;
-  }catch(e){console.log("[OSS] 同步需配置");return null}
+/* ========== GitHub 云端同步 ========== */
+var GITHUB_OWNER="xiaobinxiaozhi";
+var GITHUB_REPO="waterdrop-notes";
+var GITHUB_BRANCH="gh-pages";
+var GITHUB_PATH="data/notes.json";
+var GITHUB_SHA=null;
+
+function getToken(){return localStorage.getItem("waterdrop_gh_token")||""}
+function setToken(t){localStorage.setItem("waterdrop_gh_token",t)}
+
+async function githubRead(){
+  var r=await fetch("https://api.github.com/repos/"+GITHUB_OWNER+"/"+GITHUB_REPO+"/contents/"+GITHUB_PATH+"?ref="+GITHUB_BRANCH,{
+    headers:{Authorization:"token "+getToken(),Accept:"application/vnd.github.v3+json"}
+  });
+  if(r.status===404)return null;
+  if(!r.ok)throw new Error("读取失败 HTTP "+r.status);
+  var d=await r.json();
+  GITHUB_SHA=d.sha;
+  return JSON.parse(atob(d.content.replace(/\n/g,"")));
+}
+
+async function githubWrite(data){
+  var body={message:"水滴笔记同步 "+new Date().toLocaleString("zh-CN"),branch:GITHUB_BRANCH,content:btoa(unescape(encodeURIComponent(JSON.stringify(data))))};
+  if(GITHUB_SHA)body.sha=GITHUB_SHA;
+  var r=await fetch("https://api.github.com/repos/"+GITHUB_OWNER+"/"+GITHUB_REPO+"/contents/"+GITHUB_PATH,{
+    method:"PUT",headers:{Authorization:"token "+getToken(),Accept:"application/vnd.github.v3+json","Content-Type":"application/json"},
+    body:JSON.stringify(body)
+  });
+  if(!r.ok){var err=await r.json();throw new Error(err.message||"HTTP "+r.status)}
+  var d=await r.json();
+  GITHUB_SHA=d.content.sha;
 }
 
 async function autoSync(){
+  if(!getToken())return;
   try{
-    var r=await fetch("https://waterdrop-notes.oss-cn-hangzhou.aliyuncs.com/data/notes.json",{cache:"no-cache",mode:"cors"});
-    if(!r.ok)return;
-    var d=await r.json();
-    if(!d.notes||!Array.isArray(d.notes))return;
+    var d=await githubRead();
+    if(!d||!d.notes||!Array.isArray(d.notes))return;
     var ids=new Set(notes.map(function(n){return n.id}));
     var merged=false;
-    d.notes.forEach(function(n){if(!ids.has(n.id)){notes.push(n);merged=true}});
+    d.notes.forEach(function(n){
+      var exist=notes.find(function(x){return x.id===n.id});
+      if(!exist&&n.updatedAt){
+        var local=notes.find(function(x){return x.id===n.id});
+        if(local){if(n.updatedAt>local.updatedAt)n.htmlContent=local.htmlContent;merged=true}else{notes.push(n);merged=true}
+      }
+    });
     if(d.subdocStore)Object.assign(subdocStore,d.subdocStore);
     if(merged){renderList();renderNote();saveData();setStatus("☁️ 已同步 "+d.notes.length+" 条")}
-    localStorage.setItem("waterdrop_last_sync",Date.now().toString());
-  }catch(e){console.log("[OSS] 自动同步跳过")}
+  }catch(e){console.log("[GitHub] 同步跳过:",e.message)}
 }
 
-async function writeToOSS(){
-  if(!OSS_CFG)await loadOSSConfig();
-  if(!OSS_CFG){setStatus("⚠️ 云端未配置");return}
+async function pushToGitHub(){
+  var token=getToken();
+  if(!token){
+    var t=prompt("🔑 请输入 GitHub Token（只需输入一次，会保存在本地）：\n（找之前的聊天记录复制你的 token）");
+    if(!t)return;
+    setToken(t);
+    token=t;
+  }
   setStatus("☁️ 同步中...");
-  var data={version:2,app:"水滴笔记",exportDate:new Date().toISOString(),notes,subdocStore};
   try{
-    var body=JSON.stringify(data);
-    var dateStr=new Date().toUTCString();
-    var ct="application/json";
-    var resource="/waterdrop-notes/data/notes.json";
-    var str="PUT\n\n"+ct+"\n"+dateStr+"\n"+resource;
-    var sig=await hmacSha1(OSS_CFG.accessKeySecret,str);
-    var auth="OSS "+OSS_CFG.accessKeyId+":"+sig;
-    var r=await fetch("https://waterdrop-notes.oss-cn-hangzhou.aliyuncs.com/data/notes.json",{
-      method:"PUT",headers:{"Content-Type":ct,"Date":dateStr,Authorization:auth},body:body
-    });
-    if(!r.ok)throw new Error("HTTP "+r.status);
+    saveCurrentNote();
+    var data={version:2,app:"水滴笔记",exportDate:new Date().toISOString(),notes,subdocStore};
+    await githubWrite(data);
     localStorage.setItem("waterdrop_last_sync",Date.now().toString());
-    setStatus("✅ 已同步到云端");
+    setStatus("✅ 已同步到 GitHub");
   }catch(e){setStatus("❌ 同步失败: "+e.message,true)}
-}
-
-async function hmacSha1(key,str){
-  var enc=new TextEncoder();
-  var k=await crypto.subtle.importKey("raw",enc.encode(key),{name:"HMAC",hash:"SHA-1"},false,["sign"]);
-  var s=await crypto.subtle.sign("HMAC",k,enc.encode(str));
-  return btoa(String.fromCharCode.apply(null,new Uint8Array(s)));
 }
 
 /* ========== 工具 ========== */
@@ -1337,7 +1359,7 @@ function init(){
   document.getElementById("importBtn").onclick=function(){document.getElementById("importFile").click()};
   document.getElementById("importFile").onchange=function(e){if(e.target.files[0])importNotes(e.target.files[0]);e.target.value=""};
   document.getElementById("themeToggle").onclick=toggleTheme;
-  document.getElementById("cloudSyncBtn").onclick=writeToOSS;
+  document.getElementById("cloudSyncBtn").onclick=pushToGitHub;
 
   document.getElementById("searchInput").addEventListener("input",function(e){renderList(e.target.value)});
 
