@@ -818,8 +818,18 @@ body {
   .editor-title { font-size: 20px; }
   .rich-editor { min-height: 200px; font-size: 15px; padding: 16px; }
 
-  .topbar { padding: 6px 10px; gap: 4px; }
-  .topbar-brand { font-size: 15px; margin-right: 8px; }
+  .topbar {
+    padding: 6px 10px;
+    gap: 4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+  .topbar::-webkit-scrollbar { display: none; }
+  .topbar-brand { font-size: 15px; margin-right: 8px; flex-shrink: 0; }
+  .topbar-group { flex-shrink: 0; }
   .topbar-sep { display: none; }
   .kbd-hint { display: none; }
 
@@ -1198,7 +1208,10 @@ var lastRange=null;
 
 function getValidRange(){
   var s=window.getSelection(),ed=document.getElementById("richEditor");
-  if(s&&!s.isCollapsed&&s.rangeCount>0){var r=s.getRangeAt(0);if(ed&&ed.contains(r.commonAncestorContainer)){lastRange=r.cloneRange();return r}}
+  if(s&&!s.isCollapsed&&s.rangeCount>0&&ed&&ed.contains(s.getRangeAt(0).commonAncestorContainer)){
+    lastRange=s.getRangeAt(0).cloneRange();
+    return lastRange.cloneRange();
+  }
   if(lastRange&&ed&&ed.contains(lastRange.commonAncestorContainer)){try{return lastRange.cloneRange()}catch(e){}}
   return null;
 }
@@ -1365,10 +1378,8 @@ function startAutoPull(){
 async function pushToGitHub(){
   var token=getToken();
   if(!token){
-    var t=prompt("🔑 请输入 GitHub Token（只需输入一次，会保存在本地）：\n（找之前的聊天记录复制你的 token）");
-    if(!t)return;
-    setToken(t);
-    token=t;
+    showTokenDialog();
+    return;
   }
   setStatus("☁️ 同步中...");
   try{
@@ -1378,6 +1389,27 @@ async function pushToGitHub(){
     localStorage.setItem("waterdrop_last_sync",Date.now().toString());
     setStatus("✅ 已同步到 GitHub");
   }catch(e){setStatus("❌ 同步失败: "+e.message,true)}
+}
+
+function showTokenDialog(){
+  var m=document.createElement("div");
+  m.className="dialog-modal";
+  m.innerHTML='<div class="dialog-card"><h3>🔑 GitHub 同步设置</h3><p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">输入 GitHub Token 后，你的笔记会自动同步到云端，手机和电脑数据互通。</p><label>GitHub Token</label><input type="text" id="ghTokenInput" placeholder="粘贴你的 token..." style="font-family:monospace;font-size:12px;"><div class="dialog-actions"><button class="btn btn-primary" id="ghTokenOk">✅ 确认并同步</button><button class="btn" id="ghTokenCancel">取消</button></div></div>';
+  document.body.appendChild(m);
+  document.getElementById("ghTokenInput").focus();
+  var done=false;
+  function ok(){
+    if(done)return;done=true;
+    var t=document.getElementById("ghTokenInput").value.trim();
+    if(!t){setStatus("⚠️ token 不能为空",true);done=false;return}
+    setToken(t);m.remove();
+    pushToGitHub();
+    startAutoPull();
+  }
+  document.getElementById("ghTokenOk").onclick=ok;
+  document.getElementById("ghTokenCancel").onclick=function(){m.remove()};
+  m.addEventListener("click",function(e){if(e.target===m)m.remove()});
+  document.getElementById("ghTokenInput").addEventListener("keydown",function(e){if(e.key==="Enter")ok()});
 }
 
 /* ========== 工具 ========== */
@@ -1390,6 +1422,11 @@ function init(){
 
   document.getElementById("newNoteBtn").onclick=createNote;
   document.getElementById("addSubDocBtn").onclick=convertSelectionToSubdoc;
+  // 手机端：点击子文档按钮前不丢失选区
+  document.getElementById("addSubDocBtn").addEventListener("touchend",function(e){
+    e.preventDefault();
+    convertSelectionToSubdoc();
+  });
   document.getElementById("exportBtn").onclick=exportNotes;
   document.getElementById("importBtn").onclick=function(){document.getElementById("importFile").click()};
   document.getElementById("importFile").onchange=function(e){if(e.target.files[0])importNotes(e.target.files[0]);e.target.value=""};
