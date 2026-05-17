@@ -311,20 +311,6 @@ body {
 }
 .btn-fab:active { transform: scale(0.92); box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
 
-/* 移动端笔记列表底部 + 按钮 */
-.sidebar-footer-btn {
-  display: none;
-  width: 100%;
-  padding: 10px 0;
-  text-align: center;
-  font-size: 24px;
-  color: var(--accent);
-  cursor: pointer;
-  border-top: 1px solid var(--border);
-  background: var(--bg-sidebar);
-  transition: background var(--transition);
-}
-.sidebar-footer-btn:active { background: var(--bg-toolbar); }
 
 .note-item {
   padding: 10px 14px;
@@ -871,10 +857,6 @@ body {
   .main.note-open .btn-back { display: inline-flex !important; }
   .notes-list { max-height: unset; }
 
-  .sidebar-footer-btn { display: block; }
-  .main.note-open .sidebar { display: none; }
-  .main.note-open .sidebar-footer-btn { display: none !important; }
-  .sidebar-footer-btn { display: block; }
   .main.note-open .editor-wrap { min-height: calc(100vh - 52px); }
 
   .editor-scroll { padding: 16px; }
@@ -949,7 +931,6 @@ body {
         </div>
       </div>
       <div class="notes-list" id="notesList"></div>
-      <button class="sidebar-footer-btn" id="fabNewBtn">+</button>
     </div>
 
     <!-- 编辑器 -->
@@ -1521,8 +1502,6 @@ function init(){
   loadData();
 
   document.getElementById("newNoteBtn").onclick=createNote;
-  var fab=document.getElementById("fabNewBtn");
-  if(fab)fab.onclick=function(){createNote();setTimeout(function(){var ti=document.getElementById("noteTitle");if(ti)ti.focus()},100)};
   document.getElementById("addSubDocBtn").onclick=convertSelectionToSubdoc;
   // 手机端：点击子文档按钮前不丢失选区
   document.getElementById("addSubDocBtn").addEventListener("touchend",function(e){
