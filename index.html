@@ -1026,7 +1026,8 @@ function saveData(){
 }
 
 function loadData(){
-  var raw=localStorage.getItem("waterdrop_notes_v3");
+  var raw;
+  try{raw=localStorage.getItem("waterdrop_notes_v3")}catch(e){raw=null}
   if(!raw){
     var sid=uid();
     subdocStore[sid]={title:"寒武纪",content:"AI芯片公司，科创板上市。主营智能芯片，应用于云端和边缘计算。"};
@@ -1386,8 +1387,8 @@ var GITHUB_BRANCH="gh-pages";
 var GITHUB_PATH="data/notes.json";
 var GITHUB_SHA=null;
 
-function getToken(){return localStorage.getItem("waterdrop_gh_token")||""}
-function setToken(t){localStorage.setItem("waterdrop_gh_token",t)}
+function getToken(){try{return localStorage.getItem("waterdrop_gh_token")||""}catch(e){return ""}}
+function setToken(t){try{localStorage.setItem("waterdrop_gh_token",t)}catch(e){}}
 
 async function githubRead(){
   var r=await fetch("https://api.github.com/repos/"+GITHUB_OWNER+"/"+GITHUB_REPO+"/contents/"+GITHUB_PATH+"?ref="+GITHUB_BRANCH,{
