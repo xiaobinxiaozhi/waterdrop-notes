@@ -1408,7 +1408,13 @@ function init(){
   if(ed){
     ed.addEventListener("input",function(){debounceSave();wordCount()});
     ed.addEventListener("blur",debounceSave);
-    ed.addEventListener("mouseup",function(){var s=window.getSelection(),r;if(s&&!s.isCollapsed&&s.rangeCount>0&&ed.contains(s.getRangeAt(0).commonAncestorContainer)){r=s.getRangeAt(0).cloneRange();lastRange=r}});
+    // 监听选区变化（兼容手机 touch 选词）
+    document.addEventListener("selectionchange",function(){
+      var s=window.getSelection(),ed=document.getElementById("richEditor");
+      if(s&&!s.isCollapsed&&s.rangeCount>0&&ed&&ed.contains(s.getRangeAt(0).commonAncestorContainer)){
+        lastRange=s.getRangeAt(0).cloneRange();
+      }
+    });
     ed.addEventListener("keyup",function(){updateFmtBtns()});
     ed.addEventListener("mouseup",updateFmtBtns);
   }
