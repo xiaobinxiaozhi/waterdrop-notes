@@ -3,829 +3,536 @@
 <head>
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
- <meta name="theme-color" content="#f7f3eb">
+ <meta name="theme-color" content="#faf8f4">
  <meta name="apple-mobile-web-app-capable" content="yes">
  <meta name="apple-mobile-web-app-status-bar-style" content="default">
  <meta name="apple-mobile-web-app-title" content="水滴笔记">
  <link rel="manifest" href="manifest.json">
  <link rel="apple-touch-icon" href="icons/icon-512.svg">
- <title>水滴笔记 · 护眼版</title>
+ <title>水滴笔记 · Notebook</title>
  <style>
-/* ===== CSS 变量 · 主题系统 ===== */
+/* ===== 主题系统 ===== */
 :root {
-  /* 亮色主题 · 护眼暖色 */
-  --bg-primary: #f7f3eb;
-  --bg-secondary: #efe9dd;
-  --bg-card: rgba(255, 253, 248, 0.82);
-  --bg-sidebar: rgba(247, 241, 230, 0.7);
-  --bg-editor: rgba(255, 253, 245, 0.85);
-  --bg-toolbar: rgba(255, 252, 245, 0.75);
-  --bg-input: rgba(255, 253, 248, 0.7);
-  --bg-subdoc: #fde68a;
-  --bg-subdoc-hover: #fcd34d;
-  --bg-tooltip: #f0f7ee;
-  --bg-reading: #f5f9f0;
-  --bg-reading-header: #e2ecd6;
-  --bg-modal: rgba(255, 250, 240, 0.97);
+  --bg: #faf8f4;
+  --bg-card: #ffffff;
+  --bg-surface: #f5f2ed;
+  --bg-sidebar: #f5f2ed;
+  --bg-editor: #ffffff;
+  --bg-toolbar: rgba(255,255,255,0.82);
+  --bg-hover: #f0ede6;
+  --bg-active: #e8e4db;
 
-  --text-primary: #2c3e35;
-  --text-secondary: #5a6e5a;
-  --text-muted: #8a9a8a;
-  --text-on-primary: #fff;
-  --text-on-subdoc: #3d2a0b;
+  --text: #1e1e1e;
+  --text-secondary: #6b6b6b;
+  --text-muted: #a0a0a0;
+  --text-on-accent: #ffffff;
 
-  --border-color: rgba(180, 170, 150, 0.35);
-  --border-focus: rgba(76, 130, 70, 0.4);
-  --border-active: #4a8240;
+  --accent: #2c3e50;
+  --accent-hover: #1a2a38;
+  --accent-light: rgba(44,62,80,0.08);
 
-  --accent: #4a8240;
-  --accent-hover: #3a6e30;
-  --accent-glow: rgba(74, 130, 64, 0.25);
-  --danger: #c2410c;
-  --danger-hover: #a3360a;
+  --border: #e8e4de;
+  --border-light: #f0eee8;
 
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-  --shadow-lg: 0 12px 32px rgba(0,0,0,0.12);
-  --shadow-xl: 0 20px 48px rgba(0,0,0,0.16);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.08);
 
-  --radius-sm: 12px;
-  --radius-md: 20px;
-  --radius-lg: 32px;
-  --radius-xl: 44px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
 
-  --font-sans: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  --font: -apple-system, 'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', system-ui, sans-serif;
+  --font-mono: 'SF Mono', 'JetBrains Mono', 'Consolas', monospace;
 
-  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: 0.15s ease;
 }
 
 [data-theme="dark"] {
-  --bg-primary: #1a1e1a;
-  --bg-secondary: #222822;
-  --bg-card: rgba(34, 40, 34, 0.88);
-  --bg-sidebar: rgba(28, 34, 28, 0.75);
-  --bg-editor: rgba(30, 36, 30, 0.85);
-  --bg-toolbar: rgba(34, 40, 34, 0.8);
-  --bg-input: rgba(40, 48, 40, 0.7);
-  --bg-subdoc: #4a3a1a;
-  --bg-subdoc-hover: #5c4a22;
-  --bg-tooltip: #2a3628;
-  --bg-reading: #1e261e;
-  --bg-reading-header: #263022;
-  --bg-modal: rgba(30, 36, 30, 0.97);
+  --bg: #1c1c1e;
+  --bg-card: #252528;
+  --bg-surface: #2c2c30;
+  --bg-sidebar: #252528;
+  --bg-editor: #2c2c30;
+  --bg-toolbar: rgba(37,37,40,0.85);
+  --bg-hover: #333336;
+  --bg-active: #3a3a3e;
 
-  --text-primary: #d4ddd4;
-  --text-secondary: #a0b0a0;
-  --text-muted: #6a7a6a;
-  --text-on-subdoc: #f0e6c8;
+  --text: #f0f0f0;
+  --text-secondary: #a0a0a0;
+  --text-muted: #707070;
+  --text-on-accent: #ffffff;
 
-  --border-color: rgba(80, 100, 80, 0.3);
-  --border-focus: rgba(100, 160, 90, 0.4);
-  --border-active: #5a9e4e;
+  --accent: #7f8c9a;
+  --accent-hover: #95a0ae;
+  --accent-light: rgba(127,140,154,0.12);
 
-  --accent: #5a9e4e;
-  --accent-hover: #6ab860;
-  --accent-glow: rgba(90, 158, 78, 0.2);
+  --border: #38383d;
+  --border-light: #333336;
 
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.35);
-  --shadow-lg: 0 12px 32px rgba(0,0,0,0.4);
-  --shadow-xl: 0 20px 48px rgba(0,0,0,0.5);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.25);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.3);
 }
 
-/* ===== 重置与基础 ===== */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* ===== 重置 ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
 
 body {
-  min-height: 100vh;
-  background: var(--bg-primary);
-  font-family: var(--font-sans);
-  color: var(--text-primary);
-  transition: background var(--transition-slow), color var(--transition);
-  line-height: 1.6;
+  background: var(--bg);
+  font-family: var(--font);
+  color: var(--text);
+  line-height: 1.5;
   -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-}
+  -webkit-text-size-adjust: 100%;
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 15% 25%, var(--accent-glow) 0%, transparent 50%),
-    radial-gradient(ellipse at 85% 75%, rgba(100,160,200,0.08) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ===== 主容器 ===== */
+/* ===== App 布局 ===== */
 .app {
-  position: relative;
-  z-index: 1;
-  max-width: 1500px;
-  width: 96%;
-  margin: 16px auto;
-  height: calc(100vh - 32px);
-  background: var(--bg-card);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-xl), inset 0 1px 1px rgba(255,255,255,0.15);
-  border: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  transition: background var(--transition-slow), border-color var(--transition);
+  height: 100vh;
+  width: 100%;
+  background: var(--bg);
+  transition: background var(--transition);
 }
 
-/* ===== 工具栏 ===== */
-.toolbar {
-  padding: 10px 20px;
-  background: var(--bg-toolbar);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--border-color);
+/* ===== 顶栏 ===== */
+.topbar {
   display: flex;
-  gap: 8px;
   align-items: center;
-  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--bg-toolbar);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
   min-height: 52px;
+  flex-shrink: 0;
   transition: background var(--transition), border-color var(--transition);
 }
 
-.toolbar-group {
+.topbar-brand {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.3px;
+  margin-right: 12px;
+  white-space: nowrap;
+}
+
+.topbar-brand span { font-weight: 400; color: var(--text-muted); }
+
+.topbar-group {
   display: flex;
   gap: 4px;
   align-items: center;
-  padding: 0 8px;
-  border-right: 1px solid var(--border-color);
 }
-.toolbar-group:last-child { border-right: none; }
+
+.topbar-sep {
+  width: 1px;
+  height: 24px;
+  background: var(--border);
+  margin: 0 6px;
+  flex-shrink: 0;
+}
+
+.topbar-spacer { flex: 1; }
 
 /* ===== 按钮 ===== */
-button {
-  background: var(--bg-input);
-  border: 1px solid var(--border-color);
-  padding: 6px 14px;
-  border-radius: var(--radius-sm);
-  font-size: 0.82rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all var(--transition);
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  white-space: nowrap;
-  line-height: 1.4;
-}
-button:hover {
-  background: var(--bg-secondary);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
-}
-button:active {
-  transform: translateY(0);
-}
-button.primary {
-  background: var(--accent);
-  color: var(--text-on-primary);
-  border-color: var(--accent);
-  box-shadow: 0 2px 8px var(--accent-glow);
-}
-button.primary:hover {
-  background: var(--accent-hover);
-  box-shadow: 0 4px 14px var(--accent-glow);
-}
-button.danger:hover {
-  background: rgba(194, 65, 12, 0.12);
-  border-color: var(--danger);
-  color: var(--danger);
-}
-button.icon-btn {
-  padding: 6px 10px;
-  font-size: 1rem;
-  min-width: 34px;
+.btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+  line-height: 1.4;
+  -webkit-user-select: none;
+  user-select: none;
 }
-button[title] { position: relative; }
+.btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border);
+}
+.btn:active {
+  background: var(--bg-active);
+  transform: scale(0.97);
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--text-on-accent);
+  border-color: var(--accent);
+}
+.btn-primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+.btn-primary:active {
+  background: var(--accent-hover);
+}
+.btn-icon {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  font-size: 15px;
+  border-radius: var(--radius-sm);
+}
+.btn-sm {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  padding: 4px 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: var(--font);
+  transition: color var(--transition);
+}
+.btn-link:hover { color: var(--text); }
+.btn-link:active { opacity: 0.7; }
 
-.spacer { flex: 1; }
-
-.toolbar-hint {
-  font-size: 0.7rem;
+/* ===== 键盘提示 ===== */
+.kbd-hint {
+  font-size: 11px;
   color: var(--text-muted);
-  padding: 4px 10px;
-  border-radius: 50px;
-  background: var(--bg-secondary);
+  background: var(--bg-surface);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border-light);
+  line-height: 1.6;
+}
+.kbd-hint kbd {
+  font-family: var(--font);
+  font-weight: 600;
+  color: var(--text-secondary);
 }
 
 /* ===== 主面板 ===== */
-.main-panel { display: flex; flex: 1; min-height: 0; }
+.main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
 
-/* ===== 侧边栏 ===== */
+/* ===== 侧栏 ===== */
 .sidebar {
-  width: 280px;
-  min-width: 220px;
+  width: 260px;
+  min-width: 200px;
   background: var(--bg-sidebar);
-  backdrop-filter: blur(8px);
-  border-right: 1px solid var(--border-color);
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   transition: background var(--transition), border-color var(--transition);
 }
 
+.sidebar-header {
+  padding: 12px 12px 6px;
+}
+
 .sidebar-search {
-  padding: 12px 10px 8px;
   position: relative;
+  width: 100%;
 }
 .sidebar-search input {
   width: 100%;
-  padding: 8px 14px 8px 34px;
+  padding: 8px 12px 8px 32px;
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  border: 1px solid var(--border-color);
-  background: var(--bg-input);
-  color: var(--text-primary);
-  font-size: 0.85rem;
-  font-family: var(--font-sans);
+  background: var(--bg);
+  font-size: 13px;
+  font-family: var(--font);
+  color: var(--text);
   outline: none;
-  transition: all var(--transition);
+  transition: border-color var(--transition);
 }
 .sidebar-search input:focus {
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--accent-glow);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-light);
 }
+.sidebar-search input::placeholder { color: var(--text-muted); }
 .sidebar-search::before {
-  content: '🔍';
+  content: '';
   position: absolute;
-  left: 20px;
+  left: 10px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 0.8rem;
-  pointer-events: none;
+  width: 14px;
+  height: 14px;
+  background: var(--text-muted);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") center/contain no-repeat;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") center/contain no-repeat;
 }
 
-.notes-scroll {
+.notes-list {
   flex: 1;
   overflow-y: auto;
-  padding: 8px;
+  padding: 6px 8px;
+  overscroll-behavior: contain;
 }
 
 .note-item {
   padding: 10px 14px;
-  margin: 3px 0;
-  border-radius: var(--radius-md);
+  margin: 2px 0;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  background: var(--bg-input);
   transition: all var(--transition);
   border: 1px solid transparent;
   position: relative;
 }
 .note-item:hover {
-  background: var(--bg-secondary);
-  border-color: var(--border-color);
-  transform: translateX(3px);
+  background: var(--bg-hover);
 }
 .note-item.active {
-  background: var(--bg-editor);
-  border-color: var(--border-active);
-  box-shadow: var(--shadow-md);
+  background: var(--bg-card);
+  border-color: var(--border);
+  box-shadow: var(--shadow-sm);
 }
-.note-item.active::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 12px;
-  bottom: 12px;
-  width: 4px;
-  background: var(--accent);
-  border-radius: 0 4px 4px 0;
-}
-.note-title-text {
-  font-size: 0.88rem;
+
+.note-item-title {
+  font-size: 14px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  margin-bottom: 2px;
 }
-.note-meta {
-  font-size: 0.68rem;
+.note-item-meta {
+  font-size: 11px;
   color: var(--text-muted);
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 6px;
 }
-.note-tags {
+.note-item-tags {
   display: flex;
-  gap: 4px;
+  gap: 3px;
   flex-wrap: wrap;
-  margin-top: 2px;
+  margin-top: 4px;
 }
-.note-tag {
-  font-size: 0.6rem;
+.note-item-tag {
+  font-size: 10px;
   padding: 1px 6px;
-  border-radius: 8px;
-  background: var(--accent-glow);
+  border-radius: 3px;
+  background: var(--accent-light);
   color: var(--accent);
   font-weight: 500;
 }
-.delete-note {
+.note-item-del {
   position: absolute;
   right: 8px;
   top: 8px;
-  background: none;
-  border: none;
-  font-size: 1rem;
-  color: var(--text-muted);
-  cursor: pointer;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
   opacity: 0;
   transition: all var(--transition);
-  padding: 0;
+  background: none;
+  border: none;
+  font-family: var(--font);
 }
-.note-item:hover .delete-note { opacity: 1; }
-.delete-note:hover { background: rgba(194,65,12,0.15); color: var(--danger); }
+.note-item:hover .note-item-del { opacity: 1; }
+.note-item-del:hover { background: rgba(200,60,40,0.12); color: #c82828; }
 
 /* ===== 编辑区 ===== */
-.editor {
+.editor-wrap {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 20px 28px;
   background: var(--bg-editor);
-  backdrop-filter: blur(4px);
-  overflow-y: auto;
   transition: background var(--transition);
 }
 
-.editor-header {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 12px;
+.editor-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 32px;
+  overscroll-behavior: contain;
 }
 
-input#note-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  border: 1px solid transparent;
-  background: transparent;
-  border-radius: var(--radius-sm);
-  padding: 6px 12px;
-  outline: none;
-  color: var(--text-primary);
+.editor-title {
   width: 100%;
-  font-family: var(--font-sans);
-  transition: all var(--transition);
-}
-input#note-title:hover { background: var(--bg-input); }
-input#note-title:focus {
-  background: var(--bg-input);
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--accent-glow);
-}
-
-.tags-input-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  font-family: var(--font);
+  outline: none;
+  padding: 0;
   margin-bottom: 12px;
-  flex-wrap: wrap;
+  line-height: 1.3;
 }
-.tags-display {
+.editor-title::placeholder { color: var(--text-muted); }
+
+.editor-tags {
   display: flex;
   gap: 4px;
   flex-wrap: wrap;
-  flex: 1;
+  align-items: center;
+  margin-bottom: 16px;
+  min-height: 28px;
 }
-.tag-pill {
+
+.editor-tag {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 2px 10px;
-  border-radius: 16px;
-  background: var(--accent-glow);
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--accent-light);
   color: var(--accent);
-  font-size: 0.72rem;
+  font-size: 12px;
   font-weight: 500;
 }
-.tag-pill .tag-remove {
+.editor-tag-rm {
   cursor: pointer;
-  font-size: 0.8rem;
+  opacity: 0.5;
+  font-size: 14px;
   line-height: 1;
-  opacity: 0.6;
   transition: opacity var(--transition);
 }
-.tag-pill .tag-remove:hover { opacity: 1; }
-.tag-add-input {
-  padding: 4px 10px;
-  border: 1px dashed var(--border-color);
-  border-radius: 16px;
-  background: transparent;
-  font-size: 0.72rem;
+.editor-tag-rm:hover { opacity: 1; }
+
+.editor-tag-add {
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 12px;
   color: var(--text-muted);
+  background: none;
+  font-family: var(--font);
   outline: none;
-  width: 120px;
-  font-family: var(--font-sans);
+  width: 80px;
   transition: all var(--transition);
 }
-.tag-add-input:focus {
-  border-color: var(--border-focus);
+.editor-tag-add:focus {
+  border-color: var(--accent);
   border-style: solid;
-  width: 160px;
+  width: 120px;
+  color: var(--text);
 }
 
-/* ===== 编辑器工具栏 ===== */
-.editor-toolbar {
+/* 格式工具栏 */
+.editor-format-bar {
   display: flex;
-  gap: 4px;
+  gap: 2px;
   padding: 6px 8px;
   margin-bottom: 12px;
-  background: var(--bg-toolbar);
+  background: var(--bg-surface);
   border-radius: var(--radius-sm);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-light);
   flex-wrap: wrap;
-  transition: all var(--transition);
+  align-items: center;
 }
-.editor-toolbar button {
-  padding: 4px 10px;
-  font-size: 0.8rem;
+.editor-format-bar .fmt-btn {
+  padding: 4px 8px;
+  font-size: 12px;
   border: none;
   background: transparent;
-  border-radius: 8px;
-  min-width: auto;
+  border-radius: 4px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: var(--font);
+  font-weight: 500;
+  transition: all var(--transition);
+  min-width: 28px;
+  text-align: center;
 }
-.editor-toolbar button:hover {
-  background: var(--bg-secondary);
-  transform: none;
-  box-shadow: none;
+.editor-format-bar .fmt-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text);
 }
-.editor-toolbar button.active {
-  background: var(--accent-glow);
+.editor-format-bar .fmt-btn.active {
+  background: var(--accent-light);
   color: var(--accent);
 }
-.toolbar-divider {
+.fmt-sep {
   width: 1px;
-  background: var(--border-color);
+  height: 20px;
+  background: var(--border);
   margin: 0 4px;
-  align-self: stretch;
+  flex-shrink: 0;
 }
 
-/* ===== 富文本编辑区 ===== */
+/* 富文本编辑区 */
 .rich-editor {
   flex: 1;
-  border-radius: var(--radius-md);
+  min-height: 300px;
   padding: 20px 24px;
-  background: var(--bg-input);
-  backdrop-filter: blur(6px);
-  overflow-y: auto;
-  font-size: 1rem;
-  line-height: 1.7;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
   outline: none;
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text);
+  background: var(--bg);
   transition: all var(--transition);
+  overflow-y: auto;
 }
 .rich-editor:focus {
-  background: var(--bg-editor);
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--accent-glow);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-light);
 }
-.rich-editor p { margin-bottom: 0.6em; }
-.rich-editor h1, .rich-editor h2, .rich-editor h3 { margin: 0.8em 0 0.4em; }
-.rich-editor ul, .rich-editor ol { padding-left: 1.5em; margin-bottom: 0.6em; }
+.rich-editor p { margin-bottom: 0.5em; }
+.rich-editor h2, .rich-editor h3 { margin: 0.8em 0 0.3em; font-weight: 600; }
+.rich-editor h2 { font-size: 1.3em; }
+.rich-editor h3 { font-size: 1.1em; }
+.rich-editor ul, .rich-editor ol { padding-left: 1.4em; margin-bottom: 0.5em; }
 .rich-editor blockquote {
   border-left: 3px solid var(--accent);
-  padding-left: 16px;
+  padding-left: 14px;
   margin: 8px 0;
   color: var(--text-secondary);
   font-style: italic;
 }
 .rich-editor hr {
   border: none;
-  border-top: 1px dashed var(--border-color);
+  border-top: 1px dashed var(--border);
   margin: 16px 0;
 }
 .rich-editor code {
-  background: var(--bg-secondary);
+  background: var(--bg-hover);
   padding: 2px 6px;
-  border-radius: 6px;
+  border-radius: 4px;
   font-family: var(--font-mono);
   font-size: 0.9em;
 }
 .rich-editor pre {
-  background: var(--bg-secondary);
+  background: var(--bg-hover);
   padding: 14px 18px;
   border-radius: var(--radius-sm);
   overflow-x: auto;
-  margin-bottom: 0.8em;
+  margin-bottom: 0.5em;
 }
-.rich-editor pre code {
-  background: none;
-  padding: 0;
-}
+.rich-editor pre code { background: none; padding: 0; }
 
-/* ===== 子文档 ===== */
-.subdoc-entry {
-  background: var(--bg-subdoc);
-  border-radius: 14px;
-  padding: 2px 10px;
-  margin: 0 3px;
-  cursor: pointer;
-  border-bottom: 2px solid rgba(180, 140, 40, 0.4);
-  transition: all var(--transition);
-  display: inline-block;
-  font-weight: 600;
-  color: var(--text-on-subdoc);
-  font-size: 0.92em;
-}
-.subdoc-entry:hover {
-  background: var(--bg-subdoc-hover);
-  transform: scale(1.03);
-  box-shadow: var(--shadow-sm);
-}
-
-/* ===== 悬停预览 ===== */
-.tooltip-preview {
-  position: fixed;
-  background: var(--bg-tooltip);
-  color: var(--text-primary);
-  padding: 16px 22px;
-  border-radius: var(--radius-md);
-  font-size: 0.92rem;
-  line-height: 1.6;
-  max-width: 460px;
-  max-height: 380px;
-  overflow-y: auto;
-  word-wrap: break-word;
-  white-space: pre-wrap;
-  z-index: 1000;
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--border-color);
-  pointer-events: auto;
-  font-family: var(--font-sans);
-  display: flex;
-  flex-direction: column;
-  animation: tooltipIn 0.15s ease;
-}
-@keyframes tooltipIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.tooltip-preview .tooltip-content { flex: 1; margin-bottom: 12px; }
-.tooltip-preview .tooltip-title {
-  font-size: 1.05rem;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: var(--accent);
-}
-.tooltip-preview .tooltip-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  border-top: 1px solid var(--border-color);
-  padding-top: 10px;
-  margin-top: 4px;
-}
-.tooltip-preview button {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  color: var(--text-primary);
-  padding: 5px 14px;
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-  cursor: pointer;
-}
-.tooltip-preview button:hover {
-  background: var(--accent-glow);
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/* ===== 全屏阅读模式 ===== */
-.reading-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.55);
-  backdrop-filter: blur(10px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 3000;
-  animation: fadeIn 0.2s ease;
-}
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-.reading-card {
-  background: var(--bg-reading);
-  width: 88vw;
-  height: 88vh;
-  max-width: 1100px;
-  border-radius: var(--radius-xl);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: var(--shadow-xl);
-  border: 1px solid var(--border-color);
-  animation: slideUp 0.25s ease;
-}
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.reading-header {
-  padding: 18px 28px;
-  background: var(--bg-reading-header);
-  border-bottom: 1px solid var(--border-color);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.reading-header h2 {
-  color: var(--text-primary);
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0;
-}
-.reading-header button {
-  background: none;
-  border: none;
-  font-size: 1.6rem;
-  cursor: pointer;
-  color: var(--text-secondary);
-  padding: 4px 8px;
-  border-radius: var(--radius-sm);
-}
-.reading-header button:hover {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-}
-.reading-content {
-  flex: 1;
-  padding: 28px 36px;
-  overflow-y: auto;
-  font-size: 1.1rem;
-  line-height: 1.8;
-  color: var(--text-primary);
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-.reading-content .stock-action { margin-top: 24px; text-align: right; }
-.reading-content .stock-action button {
-  background: var(--accent);
-  border: none;
-  color: white;
-  padding: 10px 24px;
-  border-radius: var(--radius-md);
-  font-size: 0.95rem;
-  cursor: pointer;
-  box-shadow: var(--shadow-sm);
-}
-.reading-content .stock-action button:hover {
-  background: var(--accent-hover);
-  box-shadow: var(--shadow-md);
-}
-
-/* ===== 编辑模态框 ===== */
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  backdrop-filter: blur(6px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-  animation: fadeIn 0.2s ease;
-}
-.modal-card {
-  background: var(--bg-modal);
-  backdrop-filter: blur(12px);
-  width: 750px;
-  max-width: 92vw;
-  height: 68vh;
-  max-height: 80vh;
-  border-radius: var(--radius-xl);
-  padding: 28px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: var(--shadow-xl);
-  border: 1px solid var(--border-color);
-  animation: slideUp 0.25s ease;
-}
-.modal-card h3 {
-  margin-top: 0;
-  color: var(--text-primary);
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 16px;
-}
-.modal-card label {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-  margin-bottom: 4px;
-  display: block;
-}
-.modal-card input, .modal-card textarea {
-  width: 100%;
-  margin-bottom: 14px;
-  padding: 10px 14px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-color);
-  background: var(--bg-input);
-  font-family: var(--font-sans);
-  font-size: 0.92rem;
-  outline: none;
-  color: var(--text-primary);
-  transition: all var(--transition);
-}
-.modal-card input:focus, .modal-card textarea:focus {
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--accent-glow);
-}
-.modal-card textarea {
-  flex: 1;
-  resize: vertical;
-  min-height: 200px;
-  line-height: 1.6;
-}
-.modal-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-/* ===== 状态栏 ===== */
-.status-bar {
-  padding: 8px 24px;
-  background: var(--bg-toolbar);
-  border-top: 1px solid var(--border-color);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  transition: all var(--transition);
-}
-.status-bar .save-indicator {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.save-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent);
-  transition: background var(--transition);
-}
-.save-dot.saving {
-  background: #f59e0b;
-  animation: pulse 0.8s ease infinite;
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-/* ===== 快捷键提示 ===== */
-.shortcuts-hint {
-  font-size: 0.65rem;
-  color: var(--text-muted);
-  padding: 4px 10px;
-  background: var(--bg-secondary);
-  border-radius: 8px;
-  cursor: help;
-}
-.shortcuts-hint:hover { color: var(--text-secondary); }
-
-/* ===== 滚动条 ===== */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; opacity: 0.4; }
-::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
-
-/* ===== 导入导出文件选择 ===== */
-#importFile { display: none; }
-
-/* ===== 空状态 ===== */
+/* 空状态 */
 .empty-state {
   flex: 1;
   display: flex;
@@ -833,111 +540,371 @@ input#note-title:focus {
   justify-content: center;
   align-items: center;
   color: var(--text-muted);
-  gap: 12px;
+  gap: 8px;
+  padding: 40px;
 }
-.empty-state .empty-icon { font-size: 3rem; }
-.empty-state p { font-size: 0.95rem; }
+.empty-state .empty-icon { font-size: 48px; margin-bottom: 8px; }
+.empty-state p { font-size: 14px; }
+
+/* 子文档入口 */
+.subdoc-entry {
+  display: inline-block;
+  background: var(--accent-light);
+  color: var(--accent);
+  border-radius: 4px;
+  padding: 1px 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  border-bottom: 2px solid var(--accent);
+  font-size: 0.92em;
+}
+.subdoc-entry:hover {
+  background: var(--accent);
+  color: var(--text-on-accent);
+  transform: translateY(-1px);
+}
+
+/* 悬停预览 */
+.tooltip-preview {
+  position: fixed;
+  background: var(--bg-card);
+  color: var(--text);
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 400px;
+  max-height: 320px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  pointer-events: auto;
+  font-family: var(--font);
+  display: flex;
+  flex-direction: column;
+  animation: tipIn 0.12s ease;
+}
+@keyframes tipIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.tooltip-preview .tip-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--accent);
+}
+.tooltip-preview .tip-content { flex: 1; margin-bottom: 10px; }
+.tooltip-preview .tip-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  border-top: 1px solid var(--border-light);
+  padding-top: 8px;
+}
+
+/* 阅读模态框 */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn 0.15s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-card {
+  background: var(--bg-card);
+  width: 86vw;
+  height: 86vh;
+  max-width: 800px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  animation: slideUp 0.2s ease;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+.modal-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+.modal-header .btn-link { font-size: 20px; line-height: 1; }
+
+.modal-body {
+  flex: 1;
+  padding: 20px 24px;
+  overflow-y: auto;
+  font-size: 15px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* 编辑子文档弹窗 */
+.dialog-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2100;
+  animation: fadeIn 0.15s ease;
+}
+.dialog-card {
+  background: var(--bg-card);
+  width: 520px;
+  max-width: 90vw;
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  animation: slideUp 0.2s ease;
+}
+.dialog-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.dialog-card label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+  margin-top: 12px;
+}
+.dialog-card label:first-of-type { margin-top: 0; }
+.dialog-card input,
+.dialog-card textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  transition: border-color var(--transition);
+  box-sizing: border-box;
+}
+.dialog-card input:focus,
+.dialog-card textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-light);
+}
+.dialog-card textarea {
+  min-height: 160px;
+  resize: vertical;
+  line-height: 1.5;
+}
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* ===== 状态栏 ===== */
+.statusbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 6px 20px;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: background var(--transition), border-color var(--transition);
+}
+.statusbar-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.statusbar-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  transition: background var(--transition);
+}
+.statusbar-dot.saving {
+  background: #d4a017;
+  animation: pulse 0.8s ease infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.statusbar-spacer { flex: 1; }
+
+/* ===== 云同步弹窗 ===== */
+.sync-modal-content { padding: 0 4px; }
+.sync-modal-content .field-hint { font-size: 12px; color: var(--text-muted); margin: 2px 0 10px; }
+.sync-modal-content .sync-result {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+}
+.sync-result.success { background: #e6f4ea; color: #1e7e34; }
+.sync-result.error { background: #fce8e6; color: #c62828; }
+.sync-result.info { background: #e8f0fe; color: #1967d2; }
+.sync-mode-select label {
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+  font-weight: 400;
+  color: var(--text);
+}
+
+/* ===== 隐藏 input ===== */
+#importFile { display: none; }
+
+/* ===== 滚动条 ===== */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 20px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
 /* ===== 响应式 ===== */
-@media (max-width: 900px) {
-  .app { width: 100%; height: 100vh; margin: 0; border-radius: 0; }
-  .sidebar { width: 240px; }
-  .editor { padding: 16px; }
-  .toolbar { padding: 8px 12px; gap: 6px; }
-  .reading-card { width: 96vw; height: 94vh; border-radius: var(--radius-lg); }
+@media (max-width: 800px) {
+  .sidebar { width: 220px; }
+  .editor-scroll { padding: 20px; }
 }
 
-@media (max-width: 680px) {
-  .main-panel { flex-direction: column; }
+@media (max-width: 640px) {
+  .main { flex-direction: column; }
   .sidebar {
     width: 100%;
-    max-height: 200px;
+    max-height: 180px;
     border-right: none;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border);
   }
-  .toolbar-hint { display: none; }
-  .shortcuts-hint { display: none; }
-  /* 移动端工具栏优化 */
-  .toolbar { padding: 6px 8px; gap: 4px; }
-  .toolbar-group { padding: 0 4px; border-right: none; gap: 4px; }
-  .toolbar-divider { display: none; }
-  .toolbar button { min-height: 40px; min-width: 40px; padding: 8px 10px; font-size: 14px; }
-  button.icon-btn { min-width: 40px !important; min-height: 40px !important; }
-  button#cloudSyncBtn { font-size: 13px; padding: 8px 10px; }
-  .editor-toolbar { gap: 2px; }
-  .editor-toolbar button { min-height: 36px; min-width: 36px; padding: 6px 10px; font-size: 13px; }
-  /* 触摸优化 */
-  .note-item { padding: 10px 12px; }
-  .delete-note { opacity: 1; }
-  .sidebar-search input { min-height: 40px; font-size: 16px; }
-  #note-title { min-height: 40px; font-size: 16px; padding: 10px 14px; }
-  .rich-editor { min-height: 300px; padding: 12px; font-size: 16px; }
-  /* 侧边栏列表项触摸优化 */
-  .notes-scroll { touch-action: pan-y; }
+  .notes-list { max-height: 140px; }
+
+  .editor-scroll { padding: 16px; }
+  .editor-title { font-size: 20px; }
+  .rich-editor { min-height: 200px; font-size: 15px; padding: 16px; }
+
+  .topbar { padding: 6px 10px; gap: 4px; }
+  .topbar-brand { font-size: 15px; margin-right: 8px; }
+  .topbar-sep { display: none; }
+  .kbd-hint { display: none; }
+
+  /* 移动端触摸优化 */
+  .btn { min-height: 38px; }
+  .btn-icon { width: 38px; height: 38px; }
+  .note-item { padding: 12px 14px; }
+  .note-item-del { opacity: 1; }
+  .sidebar-search input { min-height: 36px; font-size: 15px; }
+
+  .editor-format-bar { gap: 0; }
+  .editor-format-bar .fmt-btn {
+    min-width: 34px;
+    min-height: 34px;
+    font-size: 13px;
+  }
+
+  .modal-card { width: 94vw; height: 92vh; border-radius: var(--radius-md); }
+  .dialog-card { width: 94vw; }
 }
- </style>
+</style>
 </head>
 <body>
-<div id="js-debug" style="position:fixed;top:5px;right:5px;background:#f00;color:#fff;padding:2px 8px;font-size:11px;border-radius:4px;z-index:99999;display:none;">JS OK</div>
 
 <div class="app">
-  <!-- ===== 工具栏 ===== -->
-  <div class="toolbar">
-    <div class="toolbar-group">
-      <button id="newNoteBtn" class="primary">✨ 新建</button>
-      <button id="addSubDocBtn">💧 子文档</button>
+  <!-- 顶栏 -->
+  <div class="topbar">
+    <div class="topbar-brand">水滴<span>笔记</span></div>
+    <div class="topbar-group">
+      <button class="btn btn-primary" id="newNoteBtn">✨ 新建</button>
+      <button class="btn" id="addSubDocBtn">💧 子文档</button>
     </div>
-    <div class="toolbar-group">
-      <button id="exportBtn" title="导出全部笔记为JSON备份">📤 导出</button>
-      <button id="importBtn" title="从JSON文件导入笔记">📥 导入</button>
+    <div class="topbar-sep"></div>
+    <div class="topbar-group">
+      <button class="btn" id="exportBtn">📤 导出</button>
+      <button class="btn" id="importBtn">📥 导入</button>
       <input type="file" id="importFile" accept=".json">
-      <div class="toolbar-divider"></div>
-      <button id="cloudSyncBtn" title="同步到云端/从云端同步">☁️ 云同步</button>
+      <button class="btn" id="cloudSyncBtn">☁️ 云同步</button>
     </div>
-    <div class="toolbar-group">
-      <button id="themeToggle" class="icon-btn" onclick="toggleTheme()" title="切换亮色/暗色主题">🌙</button>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-group">
+      <button class="btn btn-icon" id="themeToggle" title="切换主题">🌙</button>
     </div>
-    <span class="spacer"></span>
-    <span class="shortcuts-hint" title="Ctrl+S: 保存 | Ctrl+B: 粗体 | Ctrl+I: 斜体 | Ctrl+H: 标题 | Ctrl+N: 新建 | Ctrl+/: 帮助">⌨️ 快捷键</span>
-    <span class="toolbar-hint">💡 选中文字→子文档 | 双击子文档→编辑 | 悬停→预览</span>
+    <span class="kbd-hint"><kbd>⌨</kbd> Ctrl+S 保存 · N 新建 · B/I 格式 · H 标题</span>
   </div>
 
-  <!-- ===== 主面板 ===== -->
-  <div class="main-panel">
-    <!-- 侧边栏 -->
+  <!-- 主面板 -->
+  <div class="main">
+    <!-- 侧栏 -->
     <div class="sidebar">
-      <div class="sidebar-search">
-        <input type="text" id="searchInput" placeholder="搜索笔记...">
+      <div class="sidebar-header">
+        <div class="sidebar-search">
+          <input type="text" id="searchInput" placeholder="搜索笔记...">
+        </div>
       </div>
-      <div class="notes-scroll" id="notesList"></div>
+      <div class="notes-list" id="notesList"></div>
     </div>
 
-    <!-- 编辑区 -->
-    <div class="editor" id="editorPanel">
-      <div id="editorContent">
-        <input type="text" id="note-title" placeholder="输入笔记标题...">
-        <div class="tags-input-row">
-          <div class="tags-display" id="tagsDisplay"></div>
-          <input type="text" class="tag-add-input" id="tagAddInput" placeholder="+ 添加标签">
+    <!-- 编辑器 -->
+    <div class="editor-wrap" id="editorPanel">
+      <div class="editor-scroll" id="editorContent">
+        <input type="text" class="editor-title" id="noteTitle" placeholder="输入笔记标题...">
+        <div class="editor-tags" id="tagsDisplay"></div>
+
+        <!-- 格式工具栏 -->
+        <div class="editor-format-bar" id="editorFormatBar">
+          <button class="fmt-btn" data-cmd="bold" title="粗体 Ctrl+B"><b>B</b></button>
+          <button class="fmt-btn" data-cmd="italic" title="斜体 Ctrl+I"><i>I</i></button>
+          <button class="fmt-btn" data-cmd="underline" title="下划线 Ctrl+U"><u>U</u></button>
+          <button class="fmt-btn" data-cmd="strikeThrough" title="删除线"><s>S</s></button>
+          <span class="fmt-sep"></span>
+          <button class="fmt-btn" data-cmd="formatBlock" data-value="h2" title="标题 Ctrl+H">H</button>
+          <button class="fmt-btn" data-cmd="formatBlock" data-value="h3" title="副标题">H3</button>
+          <span class="fmt-sep"></span>
+          <button class="fmt-btn" data-cmd="insertUnorderedList" title="无序列表">• 列表</button>
+          <button class="fmt-btn" data-cmd="insertOrderedList" title="有序列表">1.</button>
+          <button class="fmt-btn" data-cmd="formatBlock" data-value="blockquote" title="引用">❝</button>
+          <span class="fmt-sep"></span>
+          <button class="fmt-btn" data-cmd="insertHorizontalRule" title="分隔线">—</button>
+          <button class="fmt-btn" data-cmd="removeFormat" title="清除格式">✕</button>
         </div>
-        <div class="editor-toolbar" id="editorToolbar">
-          <button data-cmd="bold" title="粗体 (Ctrl+B)"><b>B</b></button>
-          <button data-cmd="italic" title="斜体 (Ctrl+I)"><i>I</i></button>
-          <button data-cmd="underline" title="下划线 (Ctrl+U)"><u>U</u></button>
-          <button data-cmd="strikeThrough" title="删除线"><s>S</s></button>
-          <div class="toolbar-divider"></div>
-          <button data-cmd="formatBlock" data-value="h2" title="标题 (Ctrl+H)">H</button>
-          <button data-cmd="formatBlock" data-value="h3" title="副标题">H3</button>
-          <div class="toolbar-divider"></div>
-          <button data-cmd="insertUnorderedList" title="无序列表">• 列表</button>
-          <button data-cmd="insertOrderedList" title="有序列表">1. 列表</button>
-          <button data-cmd="formatBlock" data-value="blockquote" title="引用">❝ 引用</button>
-          <div class="toolbar-divider"></div>
-          <button data-cmd="insertHorizontalRule" title="分隔线">— 分隔</button>
-          <button data-cmd="removeFormat" title="清除格式">✕ 清除</button>
-        </div>
+
         <div id="richEditor" class="rich-editor" contenteditable="true" spellcheck="true"></div>
       </div>
+
       <div id="emptyState" class="empty-state" style="display:none;">
         <div class="empty-icon">📝</div>
         <p>选择左侧笔记或新建一个</p>
@@ -945,947 +912,459 @@ input#note-title:focus {
     </div>
   </div>
 
-  <!-- ===== 状态栏 ===== -->
-  <div class="status-bar">
-    <div class="save-indicator">
-      <span class="save-dot" id="saveDot"></span>
+  <!-- 状态栏 -->
+  <div class="statusbar">
+    <div class="statusbar-item">
+      <span class="statusbar-dot" id="saveDot"></span>
       <span id="saveStatus">已保存</span>
     </div>
-    <div id="wordCount"></div>
-    <div id="editTime"></div>
-    <div class="sync-indicator">
-      <span id="cloudSyncIcon" title="云同步状态">☁️</span>
+    <div class="statusbar-item" id="wordCount"></div>
+    <div class="statusbar-spacer"></div>
+    <div class="statusbar-item" id="editTime"></div>
+    <div class="statusbar-item">
+      <span id="cloudSyncIcon">☁️</span>
+      <span class="statusbar-spacer"></span>
     </div>
   </div>
 </div>
 
-<!-- 云同步直接写入 OSS，无需弹窗 -->
-
-/* ===== 云同步弹窗 ===== */
-.modal-overlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.3); backdrop-filter: blur(4px);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 9999;
-}
-.modal-dialog {
-  background: var(--bg-modal); border-radius: 16px; padding: 28px 32px;
-  max-width: 480px; width: 90%; box-shadow: 0 8px 40px rgba(0,0,0,0.15);
-  border: 1px solid var(--bg-secondary);
-}
-.modal-dialog h3 { margin: 0 0 8px; color: var(--text-primary); font-size: 18px; }
-.modal-desc { color: var(--text-secondary); margin: 0 0 20px; font-size: 14px; line-height: 1.5; }
-.modal-field { margin-bottom: 16px; }
-.modal-field label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600; }
-.field-hint { font-size: 12px; color: var(--text-muted); margin: 4px 0 8px; }
-.modal-input {
-  width: 100%; padding: 10px 14px; border: 1px solid var(--bg-secondary);
-  border-radius: 10px; font-size: 14px; background: var(--bg-input);
-  color: var(--text-primary); box-sizing: border-box;
-  transition: border-color 0.2s;
-}
-.modal-input:focus { outline: none; border-color: #4a7c59; }
-.sync-mode-select { display: flex; flex-direction: column; gap: 6px; }
-.sync-mode-select label { font-size: 14px; color: var(--text-primary); cursor: pointer; display: flex; align-items: center; gap: 8px; }
-.sync-mode-select input[type="radio"] { accent-color: #4a7c59; }
-.modal-actions { display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
-.modal-btn {
-  padding: 8px 18px; border: 1px solid var(--bg-secondary); border-radius: 10px;
-  background: var(--bg-card); color: var(--text-primary); cursor: pointer;
-  font-size: 14px; transition: all 0.2s;
-}
-.modal-btn:hover { background: var(--bg-secondary); }
-.modal-btn.primary { background: #4a7c59; color: #fff; border-color: #4a7c59; }
-.modal-btn.primary:hover { background: #3d6a4a; }
-.sync-result { margin-top: 12px; padding: 10px; border-radius: 8px; font-size: 13px; min-height: 20px; }
-.sync-result.success { background: #e8f5e9; color: #2e7d32; }
-.sync-result.error { background: #fbe9e7; color: #c62828; }
-.sync-result.info { background: #e3f2fd; color: #1565c0; }
-.sync-indicator { display: flex; align-items: center; gap: 4px; margin-left: auto; font-size: 13px; color: var(--text-muted); }
-.sync-indicator .sync-status { font-size: 12px; }
-.toolbar-divider { width: 1px; height: 20px; background: var(--bg-secondary); margin: 0 4px; display: inline-block; vertical-align: middle; }
-
-/* ===== 移动端适配 ===== */
-@media (max-width: 600px) {
-  .modal-dialog { padding: 20px; }
-  .modal-actions { flex-direction: column; }
-  .modal-btn { width: 100%; text-align: center; }
-}
-
 <script>
-// === 最简主题切换（确保即使其他JS失败也能用）===
-function toggleTheme(){var h=document.documentElement;var c=h.getAttribute("data-theme")||"light";var n=c==="light"?"dark":"light";h.setAttribute("data-theme",n);var b=document.getElementById("themeToggle");if(b)b.textContent=n==="light"?"🌙":"☀️";try{localStorage.setItem("waterdrop_theme",n)}catch(e){}}
-(function(){ var t=document.createElement("div");t.id="js-test";t.style.cssText="position:fixed;top:10px;right:10px;background:#0f0;padding:5px 12px;border-radius:6px;font-size:14px;z-index:99999";t.textContent="JS加载成功";document.body.appendChild(t);})();
+/* ========== 调试标记 ========== */
+(function(){ var d=document.createElement("div");d.id="js-ok";d.style.cssText="position:fixed;top:4px;right:4px;background:#2c3e50;color:#fff;padding:1px 6px;border-radius:4px;font-size:10px;z-index:99999";d.textContent="JS ✓";document.body.appendChild(d);})();
 
-// ========== 数据层 ==========
+/* ========== 数据层 ========== */
 let notes = [];
 let currentNoteId = null;
 let subdocStore = {};
-let saveTimeout = null;
-let isSaving = false;
-let lastSavedRange = null;
+let saveTimer = null;
 
-function genId() {
-  return Date.now().toString(36) + Math.random().toString(36).substr(2, 6);
+function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,6)}
+
+/* ========== 持久化 ========== */
+function saveData(){
+  try{localStorage.setItem("waterdrop_notes_v3",JSON.stringify({
+    notes,subdocStore,currentNoteId,
+    theme:document.documentElement.getAttribute("data-theme")||"light"
+  }))}catch(e){setStatus("⚠️ 保存失败",true)}
 }
 
-// ========== 持久化 ==========
-function saveAllData() {
-  try {
-    localStorage.setItem("waterdrop_notes_v2", JSON.stringify({
-      notes, subdocStore, currentNoteId,
-      theme: document.documentElement.getAttribute('data-theme') || 'light'
-    }));
-  } catch(e) {
-    console.error('保存失败:', e);
-    showSaveStatus('⚠️ 保存失败', true);
-  }
-}
-
-function loadAllData() {
-  const raw = localStorage.getItem("waterdrop_notes_v2");
-  if (!raw) {
-    const defaultSubId = genId();
-    subdocStore[defaultSubId] = {
-      title: "寒武纪",
-      content: "AI芯片公司，科创板上市。主营智能芯片，应用于云端和边缘计算。"
-    };
-    const defaultHtml = `<p>🌊 欢迎使用水滴笔记！</p><p>试试<span class="subdoc-entry" data-subdoc-id="${defaultSubId}">寒武纪</span>——悬停预览个股详情，双击编辑子文档。</p><p><b>快捷键</b>：Ctrl+S 保存 · Ctrl+B 粗体 · Ctrl+N 新建 · Ctrl+H 标题</p>`;
-    notes = [{
-      id: genId(),
-      title: "我的投资笔记",
-      htmlContent: defaultHtml,
-      tags: ["投资", "AI"],
-      updatedAt: Date.now()
-    }];
-    currentNoteId = notes[0].id;
+function loadData(){
+  var raw=localStorage.getItem("waterdrop_notes_v3");
+  if(!raw){
+    var sid=uid();
+    subdocStore[sid]={title:"寒武纪",content:"AI芯片公司，科创板上市。主营智能芯片，应用于云端和边缘计算。"};
+    notes=[{id:uid(),title:"我的投资笔记",htmlContent:'<p>🌊 欢迎使用水滴笔记！</p><p>试试<span class="subdoc-entry" data-subdoc-id="'+sid+'">寒武纪</span>——悬停预览，双击编辑。</p><p>快捷键：Ctrl+S 保存 · Ctrl+B 粗体 · Ctrl+N 新建 · Ctrl+H 标题</p>',tags:["投资","AI"],updatedAt:Date.now()}];
+    currentNoteId=notes[0].id;
   } else {
-    const data = JSON.parse(raw);
-    notes = data.notes || [];
-    subdocStore = data.subdocStore || {};
-    currentNoteId = data.currentNoteId || (notes[0]?.id || null);
-    if (data.theme) {
-      document.documentElement.setAttribute('data-theme', data.theme);
+    try{
+      var d=JSON.parse(raw);
+      notes=d.notes||[];
+      subdocStore=d.subdocStore||{};
+      currentNoteId=d.currentNoteId||(notes[0]?notes[0].id:null);
+      if(d.theme)document.documentElement.setAttribute("data-theme",d.theme);
       updateThemeBtn();
-    }
+    }catch(e){notes=[]}
   }
-  renderNotesList();
-  renderCurrentNote();
+  renderList();
+  renderNote();
 }
 
-// ========== 保存状态 ==========
-function debounceSave() {
-  const dot = document.getElementById('saveDot');
-  const status = document.getElementById('saveStatus');
-  if (!dot || !status) return;
-  dot.classList.add('saving');
-  status.textContent = '保存中...';
-
-  clearTimeout(saveTimeout);
-  saveTimeout = setTimeout(() => {
-    saveCurrentNoteContent();
-    dot.classList.remove('saving');
-    status.textContent = '已保存';
-  }, 300);
-}
-
-function showSaveStatus(msg, isError) {
-  const status = document.getElementById('saveStatus');
-  if (status) {
-    status.textContent = msg;
-    if (isError) {
-      status.style.color = 'var(--danger)';
-      setTimeout(() => { status.style.color = ''; }, 2000);
-    }
+/* ========== 状态栏 ========== */
+function setStatus(msg,err){
+  var s=document.getElementById("saveStatus");
+  if(s){
+    s.textContent=msg;
+    if(err){s.style.color="#c62828";setTimeout(function(){s.style.color=""},2000)}
   }
 }
 
-// ========== 渲染 ==========
-function renderNotesList(filter) {
-  const container = document.getElementById("notesList");
-  if (!container) return;
-  container.innerHTML = "";
+function debounceSave(){
+  var dot=document.getElementById("saveDot");
+  var s=document.getElementById("saveStatus");
+  if(dot)dot.classList.add("saving");
+  if(s)s.textContent="保存中...";
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(function(){
+    saveCurrentNote();
+    if(dot)dot.classList.remove("saving");
+    if(s)s.textContent="已保存";
+  },300);
+}
 
-  const sorted = [...notes].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
-  const filtered = filter
-    ? sorted.filter(n =>
-        (n.title || '').toLowerCase().includes(filter.toLowerCase()) ||
-        (n.tags || []).some(t => t.toLowerCase().includes(filter.toLowerCase()))
-      )
-    : sorted;
-
-  if (filtered.length === 0) {
-    container.innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:0.85rem;">
-      ${filter ? '🔍 没有匹配的笔记' : '📝 还没有笔记'}
-    </div>`;
-    return;
-  }
-
-  filtered.forEach(note => {
-    const div = document.createElement("div");
-    div.className = "note-item" + (currentNoteId === note.id ? " active" : "");
-
-    const titleSpan = document.createElement("span");
-    titleSpan.className = "note-title-text";
-    titleSpan.innerText = note.title || "无标题";
-
-    const metaDiv = document.createElement("div");
-    metaDiv.className = "note-meta";
-    const timeStr = note.updatedAt ? formatTime(note.updatedAt) : '';
-    metaDiv.innerHTML = `<span>${timeStr}</span>`;
-
-    const tagsDiv = document.createElement("div");
-    tagsDiv.className = "note-tags";
-    (note.tags || []).slice(0, 3).forEach(tag => {
-      const tagEl = document.createElement("span");
-      tagEl.className = "note-tag";
-      tagEl.textContent = tag;
-      tagsDiv.appendChild(tagEl);
-    });
-
-    const delBtn = document.createElement("button");
-    delBtn.innerHTML = "✕";
-    delBtn.className = "delete-note";
-    delBtn.title = "删除笔记";
-    delBtn.onclick = (e) => { e.stopPropagation(); deleteNote(note.id); };
-
-    div.appendChild(titleSpan);
-    div.appendChild(metaDiv);
-    if (tagsDiv.children.length > 0) div.appendChild(tagsDiv);
-    div.appendChild(delBtn);
-
-    div.onclick = () => switchNote(note.id);
-    container.appendChild(div);
+/* ========== 渲染列表 ========== */
+function renderList(q){
+  var el=document.getElementById("notesList");if(!el)return;
+  el.innerHTML="";
+  var arr=[...notes].sort(function(a,b){return(b.updatedAt||0)-(a.updatedAt||0)});
+  if(q) arr=arr.filter(function(n){
+    var t=(n.title||"").toLowerCase(),ta=(n.tags||[]).join(" ").toLowerCase();
+    return t.includes(q)||ta.includes(q);
+  });
+  if(!arr.length){el.innerHTML='<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px;">'+(q?"🔍 没有匹配":"📝 还没有笔记")+"</div>";return}
+  arr.forEach(function(note){
+    var d=document.createElement("div");
+    d.className="note-item"+(currentNoteId===note.id?" active":"");
+    d.innerHTML='<div class="note-item-title">'+esc(note.title||"无标题")+'</div>'+
+      '<div class="note-item-meta">'+fmtTime(note.updatedAt)+'</div>'+
+      (note.tags&&note.tags.length?'<div class="note-item-tags">'+note.tags.slice(0,3).map(function(t){return'<span class="note-item-tag">'+esc(t)+"</span>"}).join("")+"</div>":"")+
+      '<button class="note-item-del">✕</button>';
+    d.querySelector(".note-item-del").onclick=function(e){e.stopPropagation();delNote(note.id)};
+    d.onclick=function(){switchNote(note.id)};
+    el.appendChild(d);
   });
 }
 
-function formatTime(ts) {
-  const d = new Date(ts);
-  const now = new Date();
-  const diff = now - d;
-  if (diff < 60000) return '刚刚';
-  if (diff < 3600000) return Math.floor(diff / 60000) + '分钟前';
-  if (diff < 86400000) return Math.floor(diff / 3600000) + '小时前';
-  if (diff < 604800000) return Math.floor(diff / 86400000) + '天前';
-  return d.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' });
+function fmtTime(ts){
+  if(!ts)return"";
+  var d=new Date(ts),n=new Date(),diff=n-d;
+  if(diff<6e4)return"刚刚";
+  if(diff<36e5)return Math.floor(diff/6e4)+"分钟前";
+  if(diff<864e5)return Math.floor(diff/36e5)+"小时前";
+  return d.toLocaleDateString("zh-CN",{month:"short",day:"numeric"});
 }
 
-function renderCurrentNote() {
-  const note = notes.find(n => n.id === currentNoteId);
-  const editorPanel = document.getElementById('editorPanel');
-  const editorContent = document.getElementById('editorContent');
-  const emptyState = document.getElementById('emptyState');
-
-  if (!note) {
-    editorContent.style.display = 'none';
-    emptyState.style.display = 'flex';
-    return;
-  }
-  editorContent.style.display = '';
-  emptyState.style.display = 'none';
-
-  document.getElementById("note-title").value = note.title || "";
-  document.getElementById("richEditor").innerHTML = note.htmlContent || "<p>在这里书写...</p>";
-
+/* ========== 渲染当前笔记 ========== */
+function renderNote(){
+  var note=notes.find(function(n){return n.id===currentNoteId});
+  var ec=document.getElementById("editorContent"),es=document.getElementById("emptyState");
+  if(!note){ec.style.display="none";es.style.display="flex";return}
+  ec.style.display="";es.style.display="none";
+  document.getElementById("noteTitle").value=note.title||"";
+  document.getElementById("richEditor").innerHTML=note.htmlContent||"<p>开始书写...</p>";
   renderTags(note);
-  updateWordCount();
-  updateEditTime(note);
-  attachSubdocEvents();
+  wordCount();
+  editTime(note);
+  bindSubdocEvents();
 }
 
-function renderTags(note) {
-  const container = document.getElementById('tagsDisplay');
-  container.innerHTML = '';
-  (note.tags || []).forEach((tag, i) => {
-    const pill = document.createElement('span');
-    pill.className = 'tag-pill';
-    pill.innerHTML = `${escapeHtml(tag)}<span class="tag-remove" data-idx="${i}">✕</span>`;
-    container.appendChild(pill);
+function renderTags(note){
+  var el=document.getElementById("tagsDisplay");el.innerHTML="";
+  (note.tags||[]).forEach(function(tag,i){
+    var p=document.createElement("span");
+    p.className="editor-tag";
+    p.innerHTML=esc(tag)+'<span class="editor-tag-rm" data-i="'+i+'">✕</span>';
+    el.appendChild(p);
   });
-  container.querySelectorAll('.tag-remove').forEach(btn => {
-    btn.onclick = () => {
-      note.tags.splice(parseInt(btn.dataset.idx), 1);
-      renderTags(note);
-      renderNotesList(document.getElementById('searchInput').value);
+  var inp=document.createElement("input");
+  inp.className="editor-tag-add";
+  inp.placeholder="+ 标签";
+  inp.id="tagAddInput";
+  el.appendChild(inp);
+  el.querySelectorAll(".editor-tag-rm").forEach(function(b){
+    b.onclick=function(){
+      note.tags.splice(parseInt(b.dataset.i),1);
+      renderTags(note);renderList(document.getElementById("searchInput").value);
       debounceSave();
     };
   });
 }
 
-function updateWordCount() {
-  const editor = document.getElementById('richEditor');
-  const text = editor?.innerText?.trim() || '';
-  const wc = document.getElementById('wordCount');
-  if (wc) wc.textContent = text ? `${text.length} 字` : '';
+function wordCount(){
+  var t=(document.getElementById("richEditor").innerText||"").trim();
+  var el=document.getElementById("wordCount");
+  if(el)el.textContent=t?t.length+" 字":"";
 }
 
-function updateEditTime(note) {
-  const el = document.getElementById('editTime');
-  if (el && note?.updatedAt) {
-    el.textContent = `编辑于 ${new Date(note.updatedAt).toLocaleString('zh-CN', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' })}`;
-  }
+function editTime(note){
+  var el=document.getElementById("editTime");
+  if(el&&note&&note.updatedAt)el.textContent="编辑于 "+new Date(note.updatedAt).toLocaleString("zh-CN",{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"});
 }
 
-// ========== 笔记操作 ==========
-function switchNote(id) {
-  if (currentNoteId === id) return;
-  saveCurrentNoteContent();
-  currentNoteId = id;
-  renderNotesList(document.getElementById('searchInput').value);
-  renderCurrentNote();
-  saveAllData();
+/* ========== 笔记操作 ========== */
+function switchNote(id){
+  if(currentNoteId===id)return;
+  saveCurrentNote();
+  currentNoteId=id;
+  renderList(document.getElementById("searchInput").value);
+  renderNote();
+  saveData();
 }
 
-function deleteNote(id) {
-  if (notes.length <= 1) { showSaveStatus('至少保留一个笔记', true); return; }
-  if (!confirm('确定删除此笔记？')) return;
-  const idx = notes.findIndex(n => n.id === id);
-  if (idx !== -1) notes.splice(idx, 1);
-  if (currentNoteId === id) currentNoteId = notes[0]?.id || null;
-  renderNotesList(document.getElementById('searchInput').value);
-  renderCurrentNote();
-  saveAllData();
+function delNote(id){
+  if(notes.length<=1){setStatus("至少保留一个笔记",true);return}
+  if(!confirm("确定删除？"))return;
+  notes=notes.filter(function(n){return n.id!==id});
+  if(currentNoteId===id)currentNoteId=notes[0]?notes[0].id:null;
+  renderList(document.getElementById("searchInput").value);
+  renderNote();
+  saveData();
 }
 
-function saveCurrentNoteContent() {
-  if (!currentNoteId) return;
-  const titleInput = document.getElementById("note-title");
-  const editorDiv = document.getElementById("richEditor");
-  if (!titleInput || !editorDiv) return;
-  const note = notes.find(n => n.id === currentNoteId);
-  if (note) {
-    note.title = titleInput.value;
-    note.htmlContent = editorDiv.innerHTML;
-    note.updatedAt = Date.now();
-  }
-  saveAllData();
+function saveCurrentNote(){
+  if(!currentNoteId)return;
+  var ti=document.getElementById("noteTitle"),ed=document.getElementById("richEditor");
+  if(!ti||!ed)return;
+  var note=notes.find(function(n){return n.id===currentNoteId});
+  if(note){note.title=ti.value;note.htmlContent=ed.innerHTML;note.updatedAt=Date.now()}
+  saveData();
 }
 
-function createNewNote() {
-  saveCurrentNoteContent();
-  const newId = genId();
-  notes.push({
-    id: newId,
-    title: "新笔记",
-    htmlContent: "<p>✨ 开始书写...</p>",
-    tags: [],
-    updatedAt: Date.now()
-  });
-  currentNoteId = newId;
-  renderNotesList(document.getElementById('searchInput').value);
-  renderCurrentNote();
-  saveAllData();
-  document.getElementById('note-title').focus();
-  document.getElementById('note-title').select();
+function createNote(){
+  saveCurrentNote();
+  var id=uid();
+  notes.push({id:id,title:"新笔记",htmlContent:"<p>开始书写...</p>",tags:[],updatedAt:Date.now()});
+  currentNoteId=id;
+  renderList(document.getElementById("searchInput").value);
+  renderNote();
+  saveData();
+  var ti=document.getElementById("noteTitle");
+  if(ti){ti.focus();setTimeout(function(){ti.select()},50)}
 }
 
-// ========== 子文档 ==========
-function handleStockDetail(stockName) {
-  if (!stockName?.trim()) { showSaveStatus('股票名称为空', true); return; }
-  navigator.clipboard.writeText(stockName.trim()).then(() => {
-    showSaveStatus(`✅ 已复制「${stockName}」，请粘贴到指南针搜索`);
-  }).catch(() => {
-    showSaveStatus(`请手动复制：${stockName}`, true);
-  });
+/* ========== 子文档 ========== */
+function convertSelectionToSubdoc(){
+  var editor=document.getElementById("richEditor");if(editor)editor.focus();
+  var range=getValidRange();
+  if(!range){setStatus("请先选中一段文字",true);return}
+  var text=range.toString().trim();
+  if(!text){setStatus("不能选中空白字符",true);return}
+  var sid=uid();
+  subdocStore[sid]={title:text,content:""};
+  var span=document.createElement("span");
+  span.className="subdoc-entry";span.dataset.subdocId=sid;span.textContent=text;
+  range.deleteContents();range.insertNode(span);
+  var sel=window.getSelection();sel.removeAllRanges();
+  var nr=document.createRange();nr.setStartAfter(span);nr.collapse(true);sel.addRange(nr);
+  debounceSave();bindSubdocEvents();
+  setTimeout(function(){openSubdocEditor(sid)},80);
 }
 
-function openReadingMode(subdocId) {
-  const sub = subdocStore[subdocId];
-  if (!sub) return;
-
-  const modal = document.createElement("div");
-  modal.className = "reading-modal";
-  modal.innerHTML = `
-    <div class="reading-card">
-      <div class="reading-header">
-        <h2>📖 ${escapeHtml(sub.title)}</h2>
-        <button class="close-reading" title="关闭">✕</button>
-      </div>
-      <div class="reading-content">
-        <div>${escapeHtml(sub.content).replace(/\n/g, '<br>')}</div>
-        <div class="stock-action">
-          <button class="stock-detail-btn">📈 个股详情 (${escapeHtml(sub.title)})</button>
-        </div>
-      </div>
-    </div>
-  `;
-  document.body.appendChild(modal);
-  modal.querySelector(".close-reading").onclick = () => modal.remove();
-  modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
-  const stockBtn = modal.querySelector(".stock-detail-btn");
-  if (stockBtn) stockBtn.onclick = () => handleStockDetail(sub.title);
+function openReadingMode(sid){
+  var sub=subdocStore[sid];if(!sub)return;
+  var m=document.createElement("div");
+  m.className="modal-overlay";
+  m.innerHTML='<div class="modal-card"><div class="modal-header"><h2>📖 '+esc(sub.title)+'</h2><button class="btn-link" id="closeRead">✕</button></div><div class="modal-body">'+esc(sub.content).replace(/\n/g,"<br>")+'</div><div class="modal-header" style="border-top:1px solid var(--border);border-bottom:none;"><button class="btn btn-primary" id="stockBtn">📈 个股详情 ('+esc(sub.title)+')</button></div></div>';
+  document.body.appendChild(m);
+  m.querySelector("#closeRead").onclick=function(){m.remove()};
+  m.addEventListener("click",function(e){if(e.target===m)m.remove()});
+  m.querySelector("#stockBtn").onclick=function(){navigator.clipboard.writeText(sub.title).then(function(){setStatus("✅ 已复制: "+sub.title)}).catch(function(){setStatus("⚠️ 复制失败")})};
 }
 
-function openSubdocEditor(subdocId) {
-  const sub = subdocStore[subdocId];
-  if (!sub) return;
-
-  const modal = document.createElement("div");
-  modal.className = "modal";
-  modal.innerHTML = `
-    <div class="modal-card">
-      <h3>💧 编辑子文档</h3>
-      <label>标题（用作个股名称 &amp; 入口显示文字）</label>
-      <input type="text" id="subdoc-title" value="${escapeHtml(sub.title)}">
-      <label>内容</label>
-      <textarea id="subdoc-content" placeholder="支持多行文本...">${escapeHtml(sub.content)}</textarea>
-      <div class="modal-buttons">
-        <button id="subdoc-read" class="primary">📖 阅读模式</button>
-        <button id="subdoc-save">💾 保存</button>
-        <button id="subdoc-cancel">取消</button>
-      </div>
-    </div>
-  `;
-  document.body.appendChild(modal);
-
-  const titleInput = modal.querySelector("#subdoc-title");
-  const contentArea = modal.querySelector("#subdoc-content");
-
-  const saveSub = () => {
-    sub.title = titleInput.value;
-    sub.content = contentArea.value;
-    subdocStore[subdocId] = sub;
-    saveAllData();
-    modal.remove();
-    const entry = document.querySelector(`.subdoc-entry[data-subdoc-id="${subdocId}"]`);
-    if (entry) entry.innerText = sub.title;
-    renderCurrentNote();
-  };
-
-  modal.querySelector("#subdoc-read").onclick = () => { saveSub(); openReadingMode(subdocId); };
-  modal.querySelector("#subdoc-save").onclick = saveSub;
-  modal.querySelector("#subdoc-cancel").onclick = () => modal.remove();
-  modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
+function openSubdocEditor(sid){
+  var sub=subdocStore[sid];if(!sub)return;
+  var m=document.createElement("div");
+  m.className="dialog-modal";
+  m.innerHTML='<div class="dialog-card"><h3>💧 编辑子文档</h3><label>标题</label><input type="text" id="subdocTitle" value="'+escAttr(sub.title)+'"><label>内容</label><textarea id="subdocContent" placeholder="支持多行文本...">'+escAttr(sub.content)+'</textarea><div class="dialog-actions"><button class="btn btn-primary" id="subdocSave">💾 保存</button><button class="btn" id="subdocCancel">取消</button></div></div>';
+  document.body.appendChild(m);
+  function save(){sub.title=m.querySelector("#subdocTitle").value;sub.content=m.querySelector("#subdocContent").value;subdocStore[sid]=sub;saveData();m.remove();renderNote();bindSubdocEvents()}
+  m.querySelector("#subdocSave").onclick=save;
+  m.querySelector("#subdocCancel").onclick=function(){m.remove()};
+  m.addEventListener("click",function(e){if(e.target===m)m.remove()});
 }
 
-// ========== 悬停预览 ==========
-let activeTooltip = null;
-let hideTimeout = null;
+/* ========== 悬停预览 ========== */
+var curTip=null, tipHide=null;
 
-function showTooltip(targetEl, subId) {
-  if (activeTooltip) activeTooltip.remove();
-  const sub = subdocStore[subId];
-  if (!sub) return;
-
-  const tooltip = document.createElement("div");
-  tooltip.className = "tooltip-preview";
-  tooltip.innerHTML = `
-    <div class="tooltip-content">
-      <div class="tooltip-title">📘 ${escapeHtml(sub.title)}</div>
-      ${escapeHtml(sub.content).substring(0, 600)}${sub.content.length > 600 ? '…' : ''}
-    </div>
-    <div class="tooltip-actions">
-      <button class="tooltip-read">🔍 放大阅读</button>
-      <button class="tooltip-stock">📈 ${escapeHtml(sub.title)}</button>
-    </div>
-  `;
-  document.body.appendChild(tooltip);
-  activeTooltip = tooltip;
-
-  // 定位
-  requestAnimationFrame(() => {
-    const rect = targetEl.getBoundingClientRect();
-    let left = rect.left;
-    let top = rect.bottom + 8;
-    if (left + tooltip.offsetWidth > window.innerWidth - 16) {
-      left = Math.max(16, rect.right - tooltip.offsetWidth);
-    }
-    if (top + tooltip.offsetHeight > window.innerHeight - 16) {
-      top = rect.top - tooltip.offsetHeight - 8;
-    }
-    tooltip.style.left = left + "px";
-    tooltip.style.top = top + window.scrollY + "px";
-  });
-
-  tooltip.querySelector(".tooltip-read").onclick = () => {
-    openReadingMode(subId);
-    removeTooltip();
-  };
-  tooltip.querySelector(".tooltip-stock").onclick = () => {
-    handleStockDetail(sub.title);
-    removeTooltip();
-  };
-
-  tooltip.addEventListener("mouseenter", () => clearTimeout(hideTimeout));
-  tooltip.addEventListener("mouseleave", () => {
-    hideTimeout = setTimeout(removeTooltip, 200);
+function bindSubdocEvents(){
+  document.querySelectorAll("#richEditor .subdoc-entry").forEach(function(el){
+    var sid=el.dataset.subdocId;if(!sid)return;
+    el.onmouseenter=function(){clearTimeout(tipHide);showTooltip(el,sid)};
+    el.onmouseleave=function(){tipHide=setTimeout(rmTip,200)};
+    el.ondblclick=function(){openSubdocEditor(sid)};
   });
 }
 
-function removeTooltip() {
-  if (activeTooltip) { activeTooltip.remove(); activeTooltip = null; }
-}
-
-function attachSubdocEvents() {
-  document.querySelectorAll("#richEditor .subdoc-entry").forEach(el => {
-    el.removeEventListener("mouseenter", el._me);
-    el.removeEventListener("mouseleave", el._ml);
-    el.removeEventListener("dblclick", el._db);
-
-    const subId = el.dataset.subdocId;
-    if (!subId) return;
-
-    el._me = () => { clearTimeout(hideTimeout); showTooltip(el, subId); };
-    el._ml = () => { hideTimeout = setTimeout(removeTooltip, 200); };
-    el._db = () => { openSubdocEditor(subId); };
-
-    el.addEventListener("mouseenter", el._me);
-    el.addEventListener("mouseleave", el._ml);
-    el.addEventListener("dblclick", el._db);
+function showTooltip(el,sid){
+  if(curTip)curTip.remove();
+  var sub=subdocStore[sid];if(!sub)return;
+  var tip=document.createElement("div");
+  tip.className="tooltip-preview";
+  tip.innerHTML='<div class="tip-title">📘 '+esc(sub.title)+'</div><div class="tip-content">'+esc(sub.content).substring(0,500)+(sub.content.length>500?"…":"")+'</div><div class="tip-actions"><button class="btn btn-sm" id="tipRead">🔍 放大</button><button class="btn btn-sm" id="tipCopy">📋 复制</button></div>';
+  document.body.appendChild(tip);curTip=tip;
+  requestAnimationFrame(function(){
+    var r=el.getBoundingClientRect();
+    var l=r.left,t=r.bottom+6;
+    if(l+tip.offsetWidth>window.innerWidth-10)l=Math.max(10,window.innerWidth-tip.offsetWidth-10);
+    if(t+tip.offsetHeight>window.innerHeight-10)t=Math.max(10,r.top-tip.offsetHeight-6);
+    tip.style.left=l+"px";tip.style.top=(t+window.scrollY)+"px";
   });
+  tip.querySelector("#tipRead").onclick=function(){openReadingMode(sid);rmTip()};
+  tip.querySelector("#tipCopy").onclick=function(){navigator.clipboard.writeText(sub.content).then(function(){setStatus("✅ 已复制")})};
+  tip.onmouseenter=function(){clearTimeout(tipHide)};
+  tip.onmouseleave=function(){tipHide=setTimeout(rmTip,200)};
 }
 
-// ========== 选区管理 ==========
-function saveSelection() {
-  const sel = window.getSelection();
-  const editor = document.getElementById("richEditor");
-  if (sel && !sel.isCollapsed && sel.rangeCount > 0) {
-    const range = sel.getRangeAt(0);
-    if (editor?.contains(range.commonAncestorContainer)) {
-      lastSavedRange = range.cloneRange();
-    }
-  }
-}
+function rmTip(){if(curTip){curTip.remove();curTip=null}}
 
-function getValidSelection() {
-  const sel = window.getSelection();
-  const editor = document.getElementById("richEditor");
-  if (sel && !sel.isCollapsed && sel.rangeCount > 0) {
-    const range = sel.getRangeAt(0);
-    if (editor?.contains(range.commonAncestorContainer)) {
-      lastSavedRange = range.cloneRange();
-      return range;
-    }
-  }
-  if (lastSavedRange && editor?.contains(lastSavedRange.commonAncestorContainer)) {
-    try { return lastSavedRange.cloneRange(); } catch(e) {}
-  }
+/* ========== 选区管理 ========== */
+var lastRange=null;
+
+function getValidRange(){
+  var s=window.getSelection(),ed=document.getElementById("richEditor");
+  if(s&&!s.isCollapsed&&s.rangeCount>0){var r=s.getRangeAt(0);if(ed&&ed.contains(r.commonAncestorContainer)){lastRange=r.cloneRange();return r}}
+  if(lastRange&&ed&&ed.contains(lastRange.commonAncestorContainer)){try{return lastRange.cloneRange()}catch(e){}}
   return null;
 }
 
-// ========== 选中文字 → 子文档 ==========
-function convertSelectionToSubdoc() {
-  const editor = document.getElementById("richEditor");
-  editor?.focus();
-  const range = getValidSelection();
-  if (!range) { showSaveStatus('请先选中一段文字！', true); return; }
-  if (!editor?.contains(range.commonAncestorContainer)) {
-    showSaveStatus('请选中编辑区内的文字', true); return;
-  }
-  const text = range.toString().trim();
-  if (!text) { showSaveStatus('不能选中空白字符', true); return; }
-
-  const subId = genId();
-  subdocStore[subId] = { title: text, content: "" };
-
-  const span = document.createElement("span");
-  span.className = "subdoc-entry";
-  span.dataset.subdocId = subId;
-  span.innerText = text;
-
-  range.deleteContents();
-  range.insertNode(span);
-
-  const sel = window.getSelection();
-  sel.removeAllRanges();
-  const nr = document.createRange();
-  nr.setStartAfter(span);
-  nr.collapse(true);
-  sel.addRange(nr);
-  lastSavedRange = nr.cloneRange();
-
-  debounceSave();
-  attachSubdocEvents();
-  setTimeout(() => openSubdocEditor(subId), 80);
+/* ========== 格式工具栏 ========== */
+function execFmt(cmd,val){
+  document.getElementById("richEditor").focus();
+  document.execCommand(cmd,false,val||null);
+  updateFmtBtns();
 }
 
-// ========== 编辑器工具栏 ==========
-function execCmd(cmd, value) {
-  document.getElementById('richEditor')?.focus();
-  document.execCommand(cmd, false, value || null);
-  updateToolbarState();
-}
-
-function updateToolbarState() {
-  document.querySelectorAll('.editor-toolbar button[data-cmd]').forEach(btn => {
-    const cmd = btn.dataset.cmd;
-    if (cmd === 'formatBlock') {
-      // 简化处理：不检测当前块级元素
-      btn.classList.remove('active');
-    } else {
-      btn.classList.toggle('active', document.queryCommandState(cmd));
-    }
+function updateFmtBtns(){
+  document.querySelectorAll(".editor-format-bar .fmt-btn[data-cmd]").forEach(function(b){
+    var c=b.dataset.cmd;
+    if(c==="formatBlock")b.classList.remove("active");
+    else b.classList.toggle("active",document.queryCommandState(c));
   });
 }
 
-// ========== 主题 ==========
-function toggleTheme() {
-  const html = document.documentElement;
-  const current = html.getAttribute('data-theme') || 'light';
-  const next = current === 'light' ? 'dark' : 'light';
-  html.setAttribute('data-theme', next);
+/* ========== 主题 ========== */
+function toggleTheme(){
+  var h=document.documentElement;
+  var cur=h.getAttribute("data-theme")||"light";
+  var nxt=cur==="light"?"dark":"light";
+  h.setAttribute("data-theme",nxt);
   updateThemeBtn();
-  saveAllData();
+  saveData();
 }
 
-function updateThemeBtn() {
-  const btn = document.getElementById('themeToggle');
-  if (btn) {
-    const theme = document.documentElement.getAttribute('data-theme') || 'light';
-    btn.textContent = theme === 'light' ? '🌙' : '☀️';
-    btn.title = theme === 'light' ? '切换到暗色模式' : '切换到亮色模式';
-  }
+function updateThemeBtn(){
+  var b=document.getElementById("themeToggle");
+  if(b) b.textContent=(document.documentElement.getAttribute("data-theme")||"light")==="light"?"🌙":"☀️";
 }
 
-// ========== 导入/导出 ==========
-function exportNotes() {
-  const data = {
-    version: 2,
-    exportDate: new Date().toISOString(),
-    notes,
-    subdocStore
+/* ========== 导入/导出 ========== */
+function exportNotes(){
+  var blob=new Blob([JSON.stringify({version:2,exportDate:new Date().toISOString(),notes,subdocStore},null,2)],{type:"application/json"});
+  var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="水滴笔记_"+new Date().toLocaleDateString("zh-CN").replace(/\//g,"-")+".json";a.click();
+  URL.revokeObjectURL(blob);setStatus("✅ 导出成功");
+}
+
+function importNotes(file){
+  var r=new FileReader();
+  r.onload=function(e){
+    try{
+      var d=JSON.parse(e.target.result);
+      if(!d.notes||!Array.isArray(d.notes)){setStatus("⚠️ 文件格式不正确",true);return}
+      if(notes.length>0&&!confirm("将导入 "+d.notes.length+" 条笔记，是否合并？\n（取消=替换全部）")){
+        var ids=new Set(notes.map(function(n){return n.id}));
+        d.notes.forEach(function(n){if(!ids.has(n.id))notes.push(n)});
+        if(d.subdocStore)Object.assign(subdocStore,d.subdocStore);
+      } else {notes=d.notes;subdocStore=d.subdocStore||{};currentNoteId=notes[0]?notes[0].id:null}
+      renderList();renderNote();saveData();
+      setStatus("✅ 导入成功 ("+d.notes.length+" 条)");
+    }catch(err){setStatus("⚠️ 导入失败: "+err.message,true)}
   };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `水滴笔记_${new Date().toLocaleDateString('zh-CN').replace(/\//g, '-')}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-  showSaveStatus('✅ 导出成功');
+  r.readAsText(file);
 }
 
-function importNotes(file) {
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const data = JSON.parse(e.target.result);
-      if (data.notes && Array.isArray(data.notes)) {
-        if (notes.length > 0 && !confirm(`将导入 ${data.notes.length} 条笔记，是否合并到现有笔记？\n（取消 = 替换全部）`)) {
-          // 合并：跳过同ID的
-          const existingIds = new Set(notes.map(n => n.id));
-          data.notes.forEach(n => {
-            if (!existingIds.has(n.id)) notes.push(n);
-          });
-          Object.assign(subdocStore, data.subdocStore || {});
-        } else {
-          notes = data.notes;
-          subdocStore = data.subdocStore || {};
-          currentNoteId = notes[0]?.id || null;
-        }
-        renderNotesList();
-        renderCurrentNote();
-        saveAllData();
-        showSaveStatus(`✅ 导入成功 (${data.notes.length} 条笔记)`);
-      } else {
-        showSaveStatus('⚠️ 文件格式不正确', true);
-      }
-    } catch(err) {
-      showSaveStatus('⚠️ 导入失败: ' + err.message, true);
-    }
-  };
-  reader.readAsText(file);
+/* ========== 快捷键 ========== */
+function handleKeys(e){
+  var mod=navigator.platform.toUpperCase().includes("MAC")?e.metaKey:e.ctrlKey;
+  if(!mod)return;
+  var k=e.key.toLowerCase();
+  if(["s","n","b","i","u","h"].indexOf(k)>=0){e.preventDefault();e.stopPropagation()}
+  if(k==="s"){saveCurrentNote();setStatus("✅ 已保存")}
+  else if(k==="n"){createNote()}
+  else if(k==="b"){execFmt("bold")}
+  else if(k==="i"){execFmt("italic")}
+  else if(k==="u"){execFmt("underline")}
+  else if(k==="h"){var b=document.queryCommandValue("formatBlock");execFmt("formatBlock",b==="h2"?"p":"h2")}
 }
 
-// ========== 快捷键 ==========
-function handleKeyboard(e) {
-  const isMac = navigator.platform.toUpperCase().includes('MAC');
-  const mod = isMac ? e.metaKey : e.ctrlKey;
-
-  // 不按修饰键时不处理
-  if (!mod) return;
-
-  // 按住 Ctrl 时阻止浏览器默认行为
-  if (mod && ['s','n','b','i','u','h','o','p','t'].includes(e.key)) {
-    e.preventDefault();
-    e.stopPropagation();
-  }
-
-  if (mod && e.key === 's') {
-    saveCurrentNoteContent();
-    showSaveStatus('✅ 已保存');
-    return;
-  }
-  if (mod && e.key === 'n') {
-    createNewNote();
-    return;
-  }
-  // Ctrl+B/I/U 不限制焦点位置，直接在编辑器执行
-  if (mod && e.key === 'b') { execCmd('bold'); return; }
-  if (mod && e.key === 'i') { execCmd('italic'); return; }
-  if (mod && e.key === 'u') { execCmd('underline'); return; }
-  if (mod && e.key === 'h') {
-    const block = document.queryCommandValue('formatBlock');
-    if (block === 'h2') {
-      execCmd('formatBlock', 'p');
-    } else {
-      execCmd('formatBlock', 'h2');
-    }
-    return;
-  }
+/* ========== 云同步（OSS 直写）========== */
+var OSS_CFG=null;
+async function loadOSSConfig(){
+  if(OSS_CFG)return OSS_CFG;
+  try{
+    var r=await fetch("https://waterdrop-notes.oss-cn-hangzhou.aliyuncs.com/config.json",{cache:"no-cache",mode:"cors"});
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    OSS_CFG=await r.json();return OSS_CFG;
+  }catch(e){console.log("[OSS] 同步需配置");return null}
 }
 
-// ========== 工具函数 ==========
-function escapeHtml(str) {
-  return str.replace(/[&<>"']/g, m => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
-  }[m] || m));
+async function autoSync(){
+  try{
+    var r=await fetch("https://waterdrop-notes.oss-cn-hangzhou.aliyuncs.com/data/notes.json",{cache:"no-cache",mode:"cors"});
+    if(!r.ok)return;
+    var d=await r.json();
+    if(!d.notes||!Array.isArray(d.notes))return;
+    var ids=new Set(notes.map(function(n){return n.id}));
+    var merged=false;
+    d.notes.forEach(function(n){if(!ids.has(n.id)){notes.push(n);merged=true}});
+    if(d.subdocStore)Object.assign(subdocStore,d.subdocStore);
+    if(merged){renderList();renderNote();saveData();setStatus("☁️ 已同步 "+d.notes.length+" 条")}
+    localStorage.setItem("waterdrop_last_sync",Date.now().toString());
+  }catch(e){console.log("[OSS] 自动同步跳过")}
 }
 
-// ========== 云同步（OSS 直连读写）===========
-const OSS_BUCKET_URL = 'https://waterdrop-notes.oss-cn-hangzhou.aliyuncs.com';
-const OSS_DATA_URL = OSS_BUCKET_URL + '/data/notes.json';
-const OSS_CONFIG_URL = OSS_BUCKET_URL + '/config.json';
-
-// OSS 配置从云端加载（不硬编码在源码中）
-let OSS_CONFIG = null;
-
-// 从 OSS 加载配置
-async function loadOSSConfig() {
-  if (OSS_CONFIG) return OSS_CONFIG;
-  try {
-    const resp = await fetch(OSS_CONFIG_URL, { cache: 'no-cache', mode: 'cors' });
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    OSS_CONFIG = await resp.json();
-    return OSS_CONFIG;
-  } catch(e) {
-    console.log('[OSS] 同步需配置:', e.message.slice(0,30));
-    return null;
-  }
-}
-
-// 启动时自动从 OSS 拉取云端数据
-async function autoFetchFromOSS() {
-  try {
-    const resp = await fetch(OSS_DATA_URL, { cache: 'no-cache', mode: 'cors' });
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const data = await resp.json();
-    if (!data.notes || !Array.isArray(data.notes)) return;
-
-    // 合并：云端有但本地没有的笔记加入本地
-    const localIds = new Set(notes.map(n => n.id));
-    let merged = false;
-    data.notes.forEach(n => {
-      if (!localIds.has(n.id)) {
-        notes.push(n);
-        merged = true;
-      }
+async function writeToOSS(){
+  if(!OSS_CFG)await loadOSSConfig();
+  if(!OSS_CFG){setStatus("⚠️ 云端未配置");return}
+  setStatus("☁️ 同步中...");
+  var data={version:2,app:"水滴笔记",exportDate:new Date().toISOString(),notes,subdocStore};
+  try{
+    var body=JSON.stringify(data);
+    var dateStr=new Date().toUTCString();
+    var ct="application/json";
+    var resource="/waterdrop-notes/data/notes.json";
+    var str="PUT\n\n"+ct+"\n"+dateStr+"\n"+resource;
+    var sig=await hmacSha1(OSS_CFG.accessKeySecret,str);
+    var auth="OSS "+OSS_CFG.accessKeyId+":"+sig;
+    var r=await fetch("https://waterdrop-notes.oss-cn-hangzhou.aliyuncs.com/data/notes.json",{
+      method:"PUT",headers:{"Content-Type":ct,"Date":dateStr,Authorization:auth},body:body
     });
-    if (data.subdocStore) {
-      Object.assign(subdocStore, data.subdocStore);
-    }
-    if (merged) {
-      renderNotesList();
-      renderCurrentNote();
-      saveAllData();
-      showSaveStatus(`☁️ 已同步 ${data.notes.length} 条云端笔记`);
-    }
-    localStorage.setItem('waterdrop_last_sync', Date.now().toString());
-    updateSyncButton();
-  } catch(e) {
-    console.log('[OSS] 自动同步跳过:', e.message);
-  }
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    localStorage.setItem("waterdrop_last_sync",Date.now().toString());
+    setStatus("✅ 已同步到云端");
+  }catch(e){setStatus("❌ 同步失败: "+e.message,true)}
 }
 
-// 直接写入 OSS
-async function writeToOSS() {
-  // 先加载配置
-  if (!OSS_CONFIG) await loadOSSConfig();
-  if (!OSS_CONFIG) {
-    showSaveStatus('⚠️ 云端同步未配置，请联系管理员设置');
-    return;
-  }
-
-  const data = {
-    version: 2,
-    app: '水滴笔记',
-    exportDate: new Date().toISOString(),
-    notes,
-    subdocStore
-  };
-
-  showSaveStatus('☁️ 正在同步到云端...');
-  setSyncButtonState('syncing');
-
-  try {
-    if (typeof OSS === 'undefined') {
-      // 通过 fetch + PUT 直写（无需 ali-oss SDK）
-      const body = JSON.stringify(data);
-      const dateStr = new Date().toUTCString();
-      const contentType = 'application/json';
-      const resource = '/waterdrop-notes/data/notes.json';
-      const stringToSign = `PUT\n\n${contentType}\n${dateStr}\n${resource}`;
-      const signature = await hmacSha1(OSS_CONFIG.accessKeySecret, stringToSign);
-      const authHeader = `OSS ${OSS_CONFIG.accessKeyId}:${signature}`;
-
-      const resp = await fetch(OSS_DATA_URL, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': contentType,
-          'Date': dateStr,
-          'Authorization': authHeader
-        },
-        body: body
-      });
-
-      if (!resp.ok) throw new Error(`写入失败 (${resp.status})`);
-    } else {
-      // 使用 ali-oss SDK
-      const client = new OSS(OSS_CONFIG);
-      await client.put('data/notes.json', new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
-    }
-
-    localStorage.setItem('waterdrop_last_sync', Date.now().toString());
-    showSaveStatus('✅ 已同步到云端');
-    setSyncButtonState('synced');
-    updateSyncButton();
-  } catch(e) {
-    console.error('[OSS] 写入失败:', e);
-    showSaveStatus('❌ 同步失败: ' + e.message);
-    setSyncButtonState('error');
-  }
+async function hmacSha1(key,str){
+  var enc=new TextEncoder();
+  var k=await crypto.subtle.importKey("raw",enc.encode(key),{name:"HMAC",hash:"SHA-1"},false,["sign"]);
+  var s=await crypto.subtle.sign("HMAC",k,enc.encode(str));
+  return btoa(String.fromCharCode.apply(null,new Uint8Array(s)));
 }
 
-// HMAC-SHA1 签名（用于 OSS REST API）
-async function hmacSha1(key, str) {
-  const enc = new TextEncoder();
-  const cryptoKey = await crypto.subtle.importKey(
-    'raw', enc.encode(key),
-    { name: 'HMAC', hash: 'SHA-1' },
-    false, ['sign']
-  );
-  const sig = await crypto.subtle.sign('HMAC', cryptoKey, enc.encode(str));
-  return btoa(String.fromCharCode(...new Uint8Array(sig)));
-}
+/* ========== 工具 ========== */
+function esc(s){return s.replace(/[&<>"']/g,function(m){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]||m})}
+function escAttr(s){return s.replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/'/g,"&#039;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
 
-// 更新同步按钮状态
-let syncState = 'idle'; // idle | syncing | synced | error
-function setSyncButtonState(state) {
-  syncState = state;
-  const btn = document.getElementById('cloudSyncBtn');
-  if (!btn) return;
-  const icon = document.getElementById('cloudSyncIcon');
-  switch(state) {
-    case 'syncing':
-      btn.innerHTML = '⏳ 同步中...';
-      if (icon) icon.textContent = '⏳';
-      btn.style.opacity = '0.7';
-      break;
-    case 'synced':
-      btn.innerHTML = '✅ 已同步';
-      if (icon) icon.textContent = '✅';
-      btn.style.opacity = '1';
-      setTimeout(() => setSyncButtonState('idle'), 3000);
-      break;
-    case 'error':
-      btn.innerHTML = '❌ 同步失败 重试';
-      if (icon) icon.textContent = '❌';
-      btn.style.opacity = '1';
-      setTimeout(() => setSyncButtonState('idle'), 5000);
-      break;
-    default:
-      btn.innerHTML = '☁️ 云同步';
-      if (icon) icon.textContent = '☁️';
-      btn.style.opacity = '1';
-  }
-}
-function updateSyncButton() {
-  const lastSync = localStorage.getItem('waterdrop_last_sync');
-  if (lastSync) setSyncButtonState('synced');
-}
+/* ========== 初始化 ========== */
+function init(){
+  loadData();
 
-// 一键同步（点击 ☁️ 按钮）
-function onCloudSyncClick() {
-  writeToOSS();
-}
+  document.getElementById("newNoteBtn").onclick=createNote;
+  document.getElementById("addSubDocBtn").onclick=convertSelectionToSubdoc;
+  document.getElementById("exportBtn").onclick=exportNotes;
+  document.getElementById("importBtn").onclick=function(){document.getElementById("importFile").click()};
+  document.getElementById("importFile").onchange=function(e){if(e.target.files[0])importNotes(e.target.files[0]);e.target.value=""};
+  document.getElementById("themeToggle").onclick=toggleTheme;
+  document.getElementById("cloudSyncBtn").onclick=writeToOSS;
 
-// ========== 初始化 ==========
-function init() {
-  loadAllData();
+  document.getElementById("searchInput").addEventListener("input",function(e){renderList(e.target.value)});
 
-  // 按钮绑定
-  document.getElementById("newNoteBtn").onclick = createNewNote;
-  document.getElementById("addSubDocBtn").onclick = convertSelectionToSubdoc;
-  document.getElementById("exportBtn").onclick = exportNotes;
-  document.getElementById("importBtn").onclick = () => document.getElementById("importFile").click();
-  document.getElementById("importFile").onchange = (e) => {
-    if (e.target.files[0]) importNotes(e.target.files[0]);
-    e.target.value = '';
-  };
-  document.getElementById("themeToggle").onclick = toggleTheme;
-  document.getElementById("themeToggle").addEventListener('touchend', (e) => {
-    e.preventDefault();
-    toggleTheme();
-  }, { passive: false });
-
-  // 云同步绑定
-  const syncBtn = document.getElementById("cloudSyncBtn");
-  if (syncBtn) syncBtn.onclick = onCloudSyncClick;
-
-  // 搜索
-  document.getElementById("searchInput").addEventListener("input", (e) => {
-    renderNotesList(e.target.value);
+  document.querySelectorAll(".editor-format-bar .fmt-btn[data-cmd]").forEach(function(b){
+    b.addEventListener("mousedown",function(e){e.preventDefault()});
+    b.onclick=function(){execFmt(b.dataset.cmd,b.dataset.value)};
   });
 
-  // 标签添加
-  document.getElementById("tagAddInput").addEventListener("keydown", (e) => {
-    if (e.key === 'Enter') {
-      const val = e.target.value.trim();
-      if (!val) return;
-      const note = notes.find(n => n.id === currentNoteId);
-      if (note) {
-        if (!note.tags) note.tags = [];
-        if (!note.tags.includes(val)) {
-          note.tags.push(val);
-          renderTags(note);
-          renderNotesList(document.getElementById('searchInput').value);
-        }
-      }
-      e.target.value = '';
-      debounceSave();
-    }
-  });
-
-  // 编辑器工具栏
-  document.querySelectorAll('.editor-toolbar button[data-cmd]').forEach(btn => {
-    btn.addEventListener('mousedown', e => e.preventDefault());
-    btn.onclick = () => execCmd(btn.dataset.cmd, btn.dataset.value);
-  });
-
-  // 自动保存
-  const titleInput = document.getElementById("note-title");
-  const editor = document.getElementById("richEditor");
-  titleInput?.addEventListener("input", debounceSave);
-  editor?.addEventListener("input", () => { debounceSave(); updateWordCount(); });
-  editor?.addEventListener("blur", debounceSave);
-  editor?.addEventListener("mouseup", saveSelection);
-  editor?.addEventListener("keyup", () => { saveSelection(); updateToolbarState(); });
-  editor?.addEventListener("mouseup", updateToolbarState);
-
-  // 键盘快捷键
-  document.addEventListener("keydown", handleKeyboard, { capture: true });
-
-  // 页面关闭前保存
-  window.addEventListener("beforeunload", () => {
-    clearTimeout(saveTimeout);
-    saveCurrentNoteContent();
-  });
-
-  // 注册 Service Worker（PWA 离线支持）
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').then(reg => {
-      console.log('[水滴笔记] SW 注册成功, scope:', reg.scope);
-    }).catch(err => {
-      console.warn('[水滴笔记] SW 注册失败:', err);
-    });
+  var ti=document.getElementById("noteTitle"),ed=document.getElementById("richEditor");
+  if(ti)ti.addEventListener("input",debounceSave);
+  if(ed){
+    ed.addEventListener("input",function(){debounceSave();wordCount()});
+    ed.addEventListener("blur",debounceSave);
+    ed.addEventListener("mouseup",function(){var s=window.getSelection(),r;if(s&&!s.isCollapsed&&s.rangeCount>0&&ed.contains(s.getRangeAt(0).commonAncestorContainer)){r=s.getRangeAt(0).cloneRange();lastRange=r}});
+    ed.addEventListener("keyup",function(){updateFmtBtns()});
+    ed.addEventListener("mouseup",updateFmtBtns);
   }
 
-  // 启动后自动从云端同步
-  setTimeout(autoFetchFromOSS, 500);
+  document.addEventListener("keydown",handleKeys,{capture:true});
+
+  window.addEventListener("beforeunload",function(){clearTimeout(saveTimer);saveCurrentNote()});
+
+  if("serviceWorker"in navigator){
+    navigator.serviceWorker.register("./sw.js").then(function(reg){console.log("[水滴] SW OK:",reg.scope)}).catch(function(err){console.warn("[水滴] SW:",err)});
+  }
+
+  setTimeout(autoSync,500);
 }
 
 init();
 </script>
-
 </body>
 </html>
