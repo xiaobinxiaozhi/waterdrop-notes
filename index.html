@@ -830,7 +830,8 @@ body {
     border-bottom: 1px solid var(--border);
   }
   .notes-list { max-height: 140px; }
-  .btn-back { display: none !important; }
+  .btn-back { display: none; }
+  .main.note-open .btn-back { display: inline-flex !important; }
   .main.note-open .sidebar { display: none; }
   .main.note-open .editor-wrap { min-height: calc(100vh - 52px); }
 
