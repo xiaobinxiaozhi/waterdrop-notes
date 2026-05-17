@@ -1004,8 +1004,14 @@ function debounceSave(){
 
 var pushTimer=null;
 function debouncePush(){
+  if(!getToken())return;
   clearTimeout(pushTimer);
-  pushTimer=setTimeout(function(){pushToGitHub().catch(function(){})},2000);
+  pushTimer=setTimeout(async function(){
+    try{
+      if(!GITHUB_SHA)try{await githubRead()}catch(e){}
+      if(GITHUB_SHA)await pushToGitHub();
+    }catch(e){}
+  },2000);
 }
 
 /* ========== 渲染列表 ========== */
@@ -1383,12 +1389,20 @@ async function pushToGitHub(){
   }
   setStatus("☁️ 同步中...");
   try{
+    // 先拉取最新 SHA（第一次同步时必须有 SHA 才能写入）
+    if(!GITHUB_SHA){
+      try{await githubRead()}catch(e){}
+    }
     saveCurrentNote();
     var data={version:2,app:"水滴笔记",exportDate:new Date().toISOString(),notes,subdocStore};
     await githubWrite(data);
+    // SHA 已更新，后续的 debouncePush 可以直接用
     localStorage.setItem("waterdrop_last_sync",Date.now().toString());
     setStatus("✅ 已同步到 GitHub");
-  }catch(e){setStatus("❌ 同步失败: "+e.message,true)}
+  }catch(e){
+    console.error("[GitHub] 同步错误:",e);
+    setStatus("❌ 同步失败: "+e.message,true);
+  }
 }
 
 function showTokenDialog(){
