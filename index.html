@@ -863,7 +863,7 @@ body {
     <div class="topbar-group">
       <button class="btn btn-icon" id="themeToggle" title="切换主题">🌙</button>
     </div>
-    <span class="kbd-hint"><kbd>⌨</kbd> Ctrl+S 保存 · N 新建 · B/I 格式 · H 标题</span>
+    <span class="kbd-hint"><kbd>⌨</kbd> Ctrl+S 保存 · Alt+N 新建 · B/I 格式 · H 标题</span>
   </div>
 
   <!-- 主面板 -->
@@ -953,7 +953,7 @@ function loadData(){
   if(!raw){
     var sid=uid();
     subdocStore[sid]={title:"寒武纪",content:"AI芯片公司，科创板上市。主营智能芯片，应用于云端和边缘计算。"};
-    notes=[{id:uid(),title:"我的投资笔记",htmlContent:'<p>🌊 欢迎使用水滴笔记！</p><p>试试<span class="subdoc-entry" data-subdoc-id="'+sid+'">寒武纪</span>——悬停预览，双击编辑。</p><p>快捷键：Ctrl+S 保存 · Ctrl+B 粗体 · Ctrl+N 新建 · Ctrl+H 标题</p>',tags:["投资","AI"],updatedAt:Date.now()}];
+    notes=[{id:uid(),title:"我的投资笔记",htmlContent:'<p>🌊 欢迎使用水滴笔记！</p><p>试试<span class="subdoc-entry" data-subdoc-id="'+sid+'">寒武纪</span>——悬停预览，双击编辑。</p><p>快捷键：Ctrl+S 保存 · Ctrl+B 粗体 · <b>Alt+N 新建</b> · Ctrl+H 标题</p>',tags:["投资","AI"],updatedAt:Date.now()}];
     currentNoteId=notes[0].id;
   } else {
     try{
@@ -1254,11 +1254,14 @@ function importNotes(file){
 /* ========== 快捷键 ========== */
 function handleKeys(e){
   var mod=navigator.platform.toUpperCase().includes("MAC")?e.metaKey:e.ctrlKey;
-  if(!mod)return;
   var k=e.key.toLowerCase();
-  if(["s","n","b","i","u","h"].indexOf(k)>=0){e.preventDefault();e.stopPropagation()}
+
+  // Ctrl+N 被浏览器拦截（Chrome 新建窗口），Alt+N 作为替代
+  if(e.altKey&&k==="n"){e.preventDefault();e.stopPropagation();createNote();return}
+  if(!mod)return;
+  if(["s","b","i","u","h"].indexOf(k)<0)return;
+  e.preventDefault();e.stopPropagation();
   if(k==="s"){saveCurrentNote();setStatus("✅ 已保存")}
-  else if(k==="n"){createNote()}
   else if(k==="b"){execFmt("bold")}
   else if(k==="i"){execFmt("italic")}
   else if(k==="u"){execFmt("underline")}
@@ -1353,7 +1356,7 @@ function init(){
     ed.addEventListener("mouseup",updateFmtBtns);
   }
 
-  document.addEventListener("keydown",handleKeys,{capture:true});
+  window.addEventListener("keydown",handleKeys,true);
 
   window.addEventListener("beforeunload",function(){clearTimeout(saveTimer);saveCurrentNote()});
 
