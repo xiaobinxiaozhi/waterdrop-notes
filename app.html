@@ -289,29 +289,6 @@ body {
   overscroll-behavior: contain;
 }
 
-/* 手机端底部新建栏 */
-.btn-fab {
-  display: none;
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  font-size: 28px;
-  line-height: 56px;
-  text-align: center;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.25);
-  cursor: pointer;
-  z-index: 100;
-  transition: transform .15s, box-shadow .15s;
-}
-.btn-fab:active { transform: scale(0.92); box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
-
-
 .note-item {
   padding: 10px 14px;
   margin: 2px 0;
@@ -852,11 +829,10 @@ body {
     border-right: none;
     border-bottom: 1px solid var(--border);
   }
-  .sidebar { width: 100%; max-height: unset; min-height: calc(100vh - 52px); border-right: none; border-bottom: 1px solid var(--border); }
+  .notes-list { max-height: 140px; }
   .btn-back { display: none; }
   .main.note-open .btn-back { display: inline-flex !important; }
-  .notes-list { max-height: unset; }
-
+  .main.note-open .sidebar { display: none; }
   .main.note-open .editor-wrap { min-height: calc(100vh - 52px); }
 
   .editor-scroll { padding: 16px; }
