@@ -825,11 +825,14 @@ body {
   .main { flex-direction: column; }
   .sidebar {
     width: 100%;
-    max-height: 180px;
+    max-height: unset;
+    min-height: calc(100vh - 52px);
     border-right: none;
-    border-bottom: 1px solid var(--border);
+    border-bottom: none;
   }
-  .notes-list { max-height: 140px; }
+  .notes-list { max-height: unset; flex: 1; overflow-y: auto; }
+  .editor-wrap { display: none; }
+  .main.note-open .editor-wrap { display: block; }
   .btn-back { display: none; }
   .main.note-open .btn-back { display: inline-flex !important; }
   .main.note-open .sidebar { display: none; }
