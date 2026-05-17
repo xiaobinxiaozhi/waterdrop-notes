@@ -1592,34 +1592,29 @@ function handleKeyboard(e) {
   const isMac = navigator.platform.toUpperCase().includes('MAC');
   const mod = isMac ? e.metaKey : e.ctrlKey;
 
-  if (mod && e.key === 's') {
+  // 不按修饰键时不处理
+  if (!mod) return;
+
+  // 按住 Ctrl 时阻止浏览器默认行为
+  if (mod && ['s','n','b','i','u','h','o','p','t'].includes(e.key)) {
     e.preventDefault();
+    e.stopPropagation();
+  }
+
+  if (mod && e.key === 's') {
     saveCurrentNoteContent();
     showSaveStatus('✅ 已保存');
     return;
   }
   if (mod && e.key === 'n') {
-    e.preventDefault();
     createNewNote();
     return;
   }
-  if (mod && e.key === 'b' && document.activeElement?.id === 'richEditor') {
-    e.preventDefault();
-    execCmd('bold');
-    return;
-  }
-  if (mod && e.key === 'i' && document.activeElement?.id === 'richEditor') {
-    e.preventDefault();
-    execCmd('italic');
-    return;
-  }
-  if (mod && e.key === 'u' && document.activeElement?.id === 'richEditor') {
-    e.preventDefault();
-    execCmd('underline');
-    return;
-  }
-  if (mod && e.key === 'h' && document.activeElement?.id === 'richEditor') {
-    e.preventDefault();
+  // Ctrl+B/I/U 不限制焦点位置，直接在编辑器执行
+  if (mod && e.key === 'b') { execCmd('bold'); return; }
+  if (mod && e.key === 'i') { execCmd('italic'); return; }
+  if (mod && e.key === 'u') { execCmd('underline'); return; }
+  if (mod && e.key === 'h') {
     const block = document.queryCommandValue('formatBlock');
     if (block === 'h2') {
       execCmd('formatBlock', 'p');
@@ -1868,7 +1863,7 @@ function init() {
   editor?.addEventListener("mouseup", updateToolbarState);
 
   // 键盘快捷键
-  document.addEventListener("keydown", handleKeyboard);
+  document.addEventListener("keydown", handleKeyboard, { capture: true });
 
   // 页面关闭前保存
   window.addEventListener("beforeunload", () => {
