@@ -1313,18 +1313,53 @@ async function autoSync(){
   try{
     var d=await githubRead();
     if(!d||!d.notes||!Array.isArray(d.notes))return;
-    var ids=new Set(notes.map(function(n){return n.id}));
-    var merged=false;
-    d.notes.forEach(function(n){
-      var exist=notes.find(function(x){return x.id===n.id});
-      if(!exist&&n.updatedAt){
-        var local=notes.find(function(x){return x.id===n.id});
-        if(local){if(n.updatedAt>local.updatedAt)n.htmlContent=local.htmlContent;merged=true}else{notes.push(n);merged=true}
+    var changed=false;
+    d.notes.forEach(function(remote){
+      var local=notes.find(function(x){return x.id===remote.id});
+      if(!local&&remote.updatedAt){
+        // 新笔记，加入
+        notes.push(remote);changed=true;
+      }else if(local&&remote.updatedAt>local.updatedAt){
+        // 远程更新了，且比本地新 → 覆盖本地
+        local.title=remote.title;
+        local.htmlContent=remote.htmlContent;
+        local.tags=remote.tags;
+        local.updatedAt=remote.updatedAt;
+        changed=true;
       }
     });
     if(d.subdocStore)Object.assign(subdocStore,d.subdocStore);
-    if(merged){renderList();renderNote();saveData();setStatus("☁️ 已同步 "+d.notes.length+" 条")}
+    if(changed){renderList();renderNote();saveData();setStatus("☁️ 已同步 "+d.notes.length+" 条")}
   }catch(e){console.log("[GitHub] 同步跳过:",e.message)}
+}
+
+var pullTimer=null;
+function startAutoPull(){
+  clearInterval(pullTimer);
+  if(!getToken())return;
+  pullTimer=setInterval(function(){
+    // 静默拉取（不显示状态，避免打断打字）
+    (async function(){
+      try{
+        var d=await githubRead();
+        if(!d||!d.notes||!Array.isArray(d.notes))return;
+        var changed=false;
+        d.notes.forEach(function(remote){
+          var local=notes.find(function(x){return x.id===remote.id});
+          if(!local&&remote.updatedAt){notes.push(remote);changed=true}
+          else if(local&&remote.updatedAt>local.updatedAt){
+            var isEditing=document.activeElement===document.getElementById("noteTitle")||document.activeElement===document.getElementById("richEditor");
+            if(!isEditing||remote.updatedAt>local.updatedAt+10000){
+              local.title=remote.title;local.htmlContent=remote.htmlContent;
+              local.tags=remote.tags;local.updatedAt=remote.updatedAt;changed=true;
+            }
+          }
+        });
+        if(d.subdocStore)Object.assign(subdocStore,d.subdocStore);
+        if(changed){renderList();renderNote();saveData()}
+      }catch(e){}
+    })();
+  },15000); // 每 15 秒拉一次
 }
 
 async function pushToGitHub(){
@@ -1386,7 +1421,7 @@ function init(){
     navigator.serviceWorker.register("./sw.js").then(function(reg){console.log("[水滴] SW OK:",reg.scope)}).catch(function(err){console.warn("[水滴] SW:",err)});
   }
 
-  setTimeout(autoSync,500);
+  setTimeout(function(){autoSync();startAutoPull()},500);
 }
 
 init();
