@@ -988,13 +988,13 @@ function loadData(){
     var sid=uid();
     subdocStore[sid]={title:"寒武纪",content:"AI芯片公司，科创板上市。主营智能芯片，应用于云端和边缘计算。"};
     notes=[{id:uid(),title:"我的投资笔记",htmlContent:'<p>🌊 欢迎使用水滴笔记！</p><p>试试<span class="subdoc-entry" data-subdoc-id="'+sid+'">寒武纪</span>——悬停预览，双击编辑。</p><p>快捷键：Ctrl+S 保存 · Ctrl+B 粗体 · <b>Alt+N 新建</b> · Ctrl+H 标题</p>',tags:["投资","AI"],updatedAt:Date.now()}];
-    currentNoteId=notes[0].id;
+    currentNoteId=null;
   } else {
     try{
       var d=JSON.parse(raw);
       notes=d.notes||[];
       subdocStore=d.subdocStore||{};
-      currentNoteId=d.currentNoteId||(notes[0]?notes[0].id:null);
+      currentNoteId=(window.innerWidth<=640)?null:(d.currentNoteId||(notes[0]?notes[0].id:null));
       if(d.theme)document.documentElement.setAttribute("data-theme",d.theme);
       updateThemeBtn();
     }catch(e){notes=[]}
@@ -1308,7 +1308,10 @@ function importNotes(file){
         var ids=new Set(notes.map(function(n){return n.id}));
         d.notes.forEach(function(n){if(!ids.has(n.id))notes.push(n)});
         if(d.subdocStore)Object.assign(subdocStore,d.subdocStore);
-      } else {notes=d.notes;subdocStore=d.subdocStore||{};currentNoteId=notes[0]?notes[0].id:null}
+      } else {
+        notes=d.notes;subdocStore=d.subdocStore||{};
+        currentNoteId=(window.innerWidth<=640)?null:(notes[0]?notes[0].id:null);
+      }
       renderList();renderNote();saveData();
       setStatus("✅ 导入成功 ("+d.notes.length+" 条)");
     }catch(err){setStatus("⚠️ 导入失败: "+err.message,true)}
