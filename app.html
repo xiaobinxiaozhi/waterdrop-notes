@@ -9,6 +9,8 @@
  <meta name="apple-mobile-web-app-title" content="水滴笔记">
  <link rel="manifest" href="manifest.json">
  <link rel="apple-touch-icon" href="icons/icon-512.svg">
+ <!-- PWA 404 保护：桌面快捷方式打开时确保加载正确 -->
+ <script>if(location.pathname.match(/\/waterdrop-notes\/?$/)===null&&!location.pathname.endsWith('.html')){location.replace('./index.html')}</script>
  <title>水滴笔记 · Notebook</title>
  <style>
 /* ===== 主题系统 ===== */
@@ -1532,7 +1534,7 @@ function init(){
   window.addEventListener("beforeunload",function(){clearTimeout(saveTimer);saveCurrentNote()});
 
   if("serviceWorker"in navigator){
-    navigator.serviceWorker.register("./sw.js").then(function(reg){console.log("[水滴] SW OK:",reg.scope)}).catch(function(err){console.warn("[水滴] SW:",err)});
+    navigator.serviceWorker.register("./sw.js").then(function(reg){console.log("[水滴] SW OK:",reg.scope);reg.update()}).catch(function(err){console.warn("[水滴] SW:",err)});
   }
 
   setTimeout(function(){autoSync();startAutoPull()},500);

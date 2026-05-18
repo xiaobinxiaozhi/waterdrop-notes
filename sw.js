@@ -1,5 +1,5 @@
-/* 水滴笔记 · Service Worker v1.0 */
-const CACHE_NAME = 'waterdrop-notes-v1';
+/* 水滴笔记 · Service Worker v1.1 */
+const CACHE_NAME = 'waterdrop-notes-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -34,31 +34,37 @@ self.addEventListener('activate', event => {
 
 // 拦截网络请求：缓存优先，网络回退
 self.addEventListener('fetch', event => {
-  // 只缓存 GET 请求
-  if (event.request.method !== 'GET') return;
-
-  // 不缓存扩展协议
-  const url = new URL(event.request.url);
+  const request = event.request;
+  const url = new URL(request.url);
+  
+  // 只处理 GET 请求
+  if (request.method !== 'GET') return;
   if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
 
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      // 缓存命中直接返回
-      if (cached) return cached;
+  // 导航请求（首页/404等）：始终返回 index.html
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      caches.match('./index.html').then(cached => {
+        if (cached) return cached;
+        return fetch(request).catch(() => caches.match('./index.html'));
+      })
+    );
+    return;
+  }
 
-      // 网络请求，缓存副本
-      return fetch(event.request).then(response => {
-        // 只缓存合法响应
+  event.respondWith(
+    caches.match(request).then(cached => {
+      if (cached) return cached;
+      return fetch(request).then(response => {
         if (!response || response.status !== 200 || response.type !== 'basic') {
           return response;
         }
         const clone = response.clone();
         caches.open(CACHE_NAME).then(cache => {
-          cache.put(event.request, clone);
+          cache.put(request, clone);
         });
         return response;
       }).catch(() => {
-        // 离线时返回缓存的首页作为 fallback
         return caches.match('./index.html');
       });
     })

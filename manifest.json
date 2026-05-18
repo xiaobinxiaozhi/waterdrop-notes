@@ -2,7 +2,7 @@
   "name": "水滴笔记 · 护眼版",
   "short_name": "水滴笔记",
   "description": "护眼温润的笔记应用，支持 AI 写作辅助、标签管理、多笔记切换",
-  "start_url": "/",
+  "start_url": "./index.html",
   "display": "standalone",
   "display_override": [
     "standalone",
