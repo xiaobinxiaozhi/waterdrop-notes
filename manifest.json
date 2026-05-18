@@ -9,8 +9,8 @@
     "minimal-ui"
   ],
   "orientation": "any",
-  "background_color": "#f7f3eb",
-  "theme_color": "#2c3e35",
+  "background_color": "#faf8f4",
+  "theme_color": "#2c3e50",
   "scope": "/",
   "categories": [
     "productivity",
